@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on Single-cell RNA-seq analysis with R/Bioconductor</title>
-    <link>https://js2264.github.io/scATACseq-workshop/</link>
+    <link>https://js2264.github.io/scRNAseq-workshop/</link>
     <description>Recent content in Home on Single-cell RNA-seq analysis with R/Bioconductor</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-US</language><atom:link href="https://js2264.github.io/scATACseq-workshop/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-US</language><atom:link href="https://js2264.github.io/scRNAseq-workshop/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>1. Presentation</title>
-      <link>https://js2264.github.io/scATACseq-workshop/introduction/01_presentation/</link>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/01_presentation/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://js2264.github.io/scATACseq-workshop/introduction/01_presentation/</guid>
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/01_presentation/</guid>
       <description>Jacques Serizay
 Dates TBD (around Sept./Oct. 2021)
 Where This course will be held online.
@@ -21,38 +21,43 @@ to the downstream analysis of cell clusters and temporal ordering. This course w
     
     <item>
       <title>2. Program</title>
-      <link>https://js2264.github.io/scATACseq-workshop/introduction/02_program/</link>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/02_program/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://js2264.github.io/scATACseq-workshop/introduction/02_program/</guid>
-      <description>Monday Lecture 1 – scRNA-Seq experimental design (2h)  General introduction: cell atlas overviews Overview of available scRNA-seq technologies and experimental protocols scRNAseq processing workflow: from bcl files to fastq files to count matrix 10X Genomics quality controls  Demonstration 1 – From raw data to counts (1h)  Inspecting input files Mapping sequencing data with Cellranger Inspecting output files  Homework 1 – Processing raw scRNA-Seq data (3h)  Using RStudio Logging in AWS, familiarizing yourself with the course AWS instance Shell and Unix commands to navigate directories, create folders, open files Raw file formats Get data from 10x website, single cell portal, from GEO (fastqs, counts) Process fastq  Tuesday Lecture 2 – Expression QC and normalisation (2h)  Normalisation methods https://www.</description>
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/02_program/</guid>
+      <description>Monday    Type Duration Theme Content     Lecture 2h scRNA-Seq experimental design - General introduction: cell atlas overviews
+- Overview of available scRNA-seq technologies and experimental protocols
+- scRNAseq processing workflow: from bcl files to fastq files to count matrix
+- 10X Genomics quality controls   Demonstration 1h From raw data to counts - Inspecting input files
+- Mapping sequencing data with Cellranger
+- Inspecting output files   Homework 3h Processing raw scRNA-Seq data - Using RStudio</description>
     </item>
     
     <item>
       <title>3. Contacts</title>
-      <link>https://js2264.github.io/scATACseq-workshop/introduction/03_contacts/</link>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/03_contacts/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://js2264.github.io/scATACseq-workshop/introduction/03_contacts/</guid>
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/03_contacts/</guid>
       <description>Contacts Jacques Serizay: jacques.serizay@pasteur.fr </description>
     </item>
     
     <item>
       <title>4. Rstudio</title>
-      <link>https://js2264.github.io/scATACseq-workshop/introduction/04_rstudio/</link>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/04_rstudio/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://js2264.github.io/scATACseq-workshop/introduction/04_rstudio/</guid>
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/04_rstudio/</guid>
       <description>Rstudio offers a graphical interface to facilitate the interaction between a user and an underlying programming language (this is sometimes called IDE, or integrated development environment). It can be very useful when a user is not necessarily proficent with command line-based computing. However, such graphical interfaces are not always able to connect to services such as AWS.
 Since most of the preliminary analysis we do is on AWS, we&amp;rsquo;d like to be able to use Rtudio directly from there.</description>
     </item>
     
     <item>
       <title>5. Prerequisites and required config</title>
-      <link>https://js2264.github.io/scATACseq-workshop/introduction/05_prerequisites/</link>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/05_prerequisites/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://js2264.github.io/scATACseq-workshop/introduction/05_prerequisites/</guid>
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/05_prerequisites/</guid>
       <description>Prerequisites The course is intended for those who have basic familiarity with Unix and the R scripting language.
 We will also assume that you are familiar with mapping and analysing bulk RNA-seq data as well as with the commonly available computational tools.
  If a refresher is needed for Unix command line (hopefully not), please go over this tutorial and its companion cheatsheet . Getting down to basics: an introduction to the fundamentals of R (courtesy of Mark Ravinet ).</description>
