@@ -1,33 +1,22 @@
 ---
 title: "4. Day 04"
 day: "Day 04"
-presentation1: "day04/Lecture6_pseudotime.pdf"
-presentation2: "day04/Lecture7_multiomics.pdf"
-practical1: "day04/Lab7_pseudotime"
-practical2: "day04/Lab8_citeseq"
+lecture: ""
+demo: ""
+homework: ""
 ---
 
----
+## {{< param "day" >}} lecture
 
-## Presentations for {{< param "day" >}}
+- **\[2h\]** Lecture - 
+    [[PDF]](/{{<myPackageUrl>}}Presentations/{{< param "presentation1" >}})
 
-- **\[1h 15\]** Lecture 6 - Trajectories and pseudotimes
-[[PDF]](/{{<myPackageUrl>}}Presentations/{{< param "presentation1" >}})
+## {{< param "day" >}} demonstration
 
-- **\[1h 15\]** Lecture 7 - Single-cell multi-omics
-[[PDF]](/{{<myPackageUrl>}}Presentations/{{< param "presentation2" >}})
+- **\[1h\]** Demonstration - 
+    [[HTML](/{{<myPackageUrl>}}Exercises/{{< param "demo" >}}.html) | [Rmd (save to open in RStudio)](/{{<myPackageUrl>}}Exercises/{{< param "demo" >}}.Rmd)]
 
----
+## {{< param "day" >}} homework
 
-## Exercises for {{< param "day" >}}
-
--  **\[1h 15\]** Lab 7 - Trajectory and pseudotime analyses 
-    [[HTML](/{{<myPackageUrl>}}Exercises/{{< param "practical1" >}}.html) | [Rmd (save to open in RStudio)](/{{<myPackageUrl>}}Exercises/{{< param "practical1" >}}.Rmd)]
-
-    > Trajectory inference, pseudotime, DE along differentiation path, 
-    
--  **\[1h 15\]** Lab 8 - Multi-omics integration with CITE-seq
-    [[HTML](/{{<myPackageUrl>}}Exercises/{{< param "practical2" >}}.html) | [Rmd (save to open in RStudio)](/{{<myPackageUrl>}}Exercises/{{< param "practical2" >}}.Rmd)]
-
-    > Cluster cells based on different quantitative assays, integrate multiple assays into a single workflow, multi-modal differential expression analysis
-
+-  **\[3h\]** Homework - 
+    [[HTML](/{{<myPackageUrl>}}Exercises/{{< param "homework" >}}.html) | [Rmd (save to open in RStudio)](/{{<myPackageUrl>}}Exercises/{{< param "homework" >}}.Rmd)]

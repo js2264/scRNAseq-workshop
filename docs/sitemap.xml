@@ -23,11 +23,11 @@
   </url>
   
   <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/introduction/03_contacts/</loc>
+    <loc>https://js2264.github.io/scRNAseq-workshop/day03/</loc>
   </url>
   
   <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/day03/</loc>
+    <loc>https://js2264.github.io/scRNAseq-workshop/introduction/03_prerequisites/</loc>
   </url>
   
   <url>
@@ -35,7 +35,7 @@
   </url>
   
   <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/introduction/04_rstudio/</loc>
+    <loc>https://js2264.github.io/scRNAseq-workshop/introduction/04_config/</loc>
   </url>
   
   <url>
@@ -43,7 +43,11 @@
   </url>
   
   <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/introduction/05_prerequisites/</loc>
+    <loc>https://js2264.github.io/scRNAseq-workshop/introduction/05_rstudio/</loc>
+  </url>
+  
+  <url>
+    <loc>https://js2264.github.io/scRNAseq-workshop/introduction/06_contacts/</loc>
   </url>
   
   <url>

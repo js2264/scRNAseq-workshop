@@ -34,33 +34,42 @@ to the downstream analysis of cell clusters and temporal ordering. This course w
     </item>
     
     <item>
-      <title>3. Contacts</title>
-      <link>https://js2264.github.io/scRNAseq-workshop/introduction/03_contacts/</link>
+      <title>3. Prerequisites</title>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/03_prerequisites/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/03_contacts/</guid>
-      <description>Contacts Jacques Serizay: jacques.serizay@pasteur.fr </description>
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/03_prerequisites/</guid>
+      <description>Prerequisites The course is intended for those who are familiar with the shell and R language.
+We will also assume that you are familiar with mapping and analysing bulk RNA-seq data as well as with the commonly available computational tools.
+ If a refresher is needed for Unix command line (hopefully not), please go over this tutorial and its companion cheatsheet . Getting down to basics: an introduction to the fundamentals of R (courtesy of Mark Ravinet ).</description>
     </item>
     
     <item>
-      <title>4. Rstudio</title>
-      <link>https://js2264.github.io/scRNAseq-workshop/introduction/04_rstudio/</link>
+      <title>4. Required config</title>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/04_config/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/04_rstudio/</guid>
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/04_config/</guid>
+      <description>Local configuration  Ideally (though not strictly required), a configured SSH client (it should be already installed on Linux/Mac machines, PuTTY can be set up for Windows). Ideally (though not strictly required), a SSH ftp client (Forklift is excellent for Mac, although not free beyond the trial version; cyberduck can be used for Windows; FileZilla can be used for both Mac, Windows and Linux). Computer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine).</description>
+    </item>
+    
+    <item>
+      <title>5. Rstudio</title>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/05_rstudio/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/05_rstudio/</guid>
       <description>Rstudio offers a graphical interface to facilitate the interaction between a user and an underlying programming language (this is sometimes called IDE, or integrated development environment). It can be very useful when a user is not necessarily proficent with command line-based computing. However, such graphical interfaces are not always able to connect to services such as AWS.
 Since most of the preliminary analysis we do is on AWS, we&amp;rsquo;d like to be able to use Rtudio directly from there.</description>
     </item>
     
     <item>
-      <title>5. Prerequisites and required config</title>
-      <link>https://js2264.github.io/scRNAseq-workshop/introduction/05_prerequisites/</link>
+      <title>6. Contacts</title>
+      <link>https://js2264.github.io/scRNAseq-workshop/introduction/06_contacts/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/05_prerequisites/</guid>
-      <description>Prerequisites The course is intended for those who have basic familiarity with Unix and the R scripting language.
-We will also assume that you are familiar with mapping and analysing bulk RNA-seq data as well as with the commonly available computational tools.
- If a refresher is needed for Unix command line (hopefully not), please go over this tutorial and its companion cheatsheet . Getting down to basics: an introduction to the fundamentals of R (courtesy of Mark Ravinet ).</description>
+      <guid>https://js2264.github.io/scRNAseq-workshop/introduction/06_contacts/</guid>
+      <description>Contacts Jacques Serizay: jacques.serizay@pasteur.fr </description>
     </item>
     
   </channel>
