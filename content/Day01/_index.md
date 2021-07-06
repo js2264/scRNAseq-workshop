@@ -1,15 +1,15 @@
 ---
 title: "1. Day 01"
 day: "Day 01"
-lecture: ""
-demo: ""
-homework: ""
+lecture: "day01/"
+demo: "day01/"
+homework: "day01/"
 ---
 
 ## {{< param "day" >}} lecture
 
 - **\[2h\]** Lecture - 
-    [[PDF]](/{{<myPackageUrl>}}Presentations/{{< param "presentation1" >}})
+    [[PDF]](/{{<myPackageUrl>}}Presentations/{{< param "lecture" >}})
 
 ## {{< param "day" >}} demonstration
 
