@@ -4,16 +4,16 @@ title: " Single-cell RNA-seq analysis with R/Bioconductor"
 
 ## Course content: 
 
-The workshop content is available [at this adress: https://github.com/js2264/scATACseq-workshop](https://github.com/js2264/scATACseq-workshop). 
+The workshop content is available [at this adress: https://github.com/js2264/scRNAseq-workshop](https://github.com/js2264/scRNAseq-workshop). 
 
 You can clone it locally with `git`: 
 
 ```sh
-git clone https://github.com/js2264/scATACseq-workshop.git
+git clone https://github.com/js2264/scRNAseq-workshop.git
 ```
 
 To download it without the command-line tool `git`, go to 
-[the GitHub repo page](https://github.com/js2264/scATACseq-workshop), click on the 
+[the GitHub repo page](https://github.com/js2264/scRNAseq-workshop), click on the 
 green `Code` button, then `Download ZIP`. Beware, the download may take a significant 
 time based on your internet connection (several hundreds MB). 
 <!-- 

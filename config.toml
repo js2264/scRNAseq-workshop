@@ -1,4 +1,4 @@
-baseURL = "https://js2264.github.io/scATACseq-workshop/"
+baseURL = "https://js2264.github.io/scRNAseq-workshop/"
 publishDir = "docs"
 languageCode = "en-US"
 defaultContentLanguage = "en"
@@ -9,8 +9,8 @@ metaDataFormat = "yaml"
 defaultContentLanguageInSubdir= true
 
 [params]
-  editURL = "https://github.com/js2264/scATACseq-workshop/blob/master/content/"
-  packageBaseUrl = "scATACseq-workshop/"
+  editURL = "https://github.com/js2264/scRNAseq-workshop/blob/master/content/"
+  packageBaseUrl = "scRNAseq-workshop/"
   description = "Single-cell RNA-seq analysis with R/Bioconductor"
   author = "Jacques Serizay"
   showVisitedLinks = false
