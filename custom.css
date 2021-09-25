@@ -1,8 +1,13 @@
 pre {
     background-color: #e3e3e3
 }
-#content pre.sourceCode {
-    background-color: #edf9ff
+#content pre.sourceCode.sh {
+    background-color: #f8ffff;
+}
+
+#content pre.sourceCode.r {
+    background-color: #f3f3f3;
+    border: 1px solid black;
 }
 
 summary {

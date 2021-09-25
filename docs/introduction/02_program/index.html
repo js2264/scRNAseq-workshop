@@ -12,26 +12,30 @@
     <title>2. Program :: Single-cell RNA-seq analysis with R/Bioconductor</title>
 
     
-    <link href="/scRNAseq-workshop/css/nucleus.css?1625572932" rel="stylesheet">
-    <link href="/scRNAseq-workshop/css/fontawesome-all.min.css?1625572932" rel="stylesheet">
-    <link href="/scRNAseq-workshop/css/hybrid.css?1625572932" rel="stylesheet">
-    <link href="/scRNAseq-workshop/css/featherlight.min.css?1625572932" rel="stylesheet">
-    <link href="/scRNAseq-workshop/css/perfect-scrollbar.min.css?1625572932" rel="stylesheet">
-    <link href="/scRNAseq-workshop/css/auto-complete.css?1625572932" rel="stylesheet">
-    <link href="/scRNAseq-workshop/css/atom-one-dark-reasonable.css?1625572932" rel="stylesheet">
-    <link href="/scRNAseq-workshop/css/theme.css?1625572932" rel="stylesheet">
-    <link href="/scRNAseq-workshop/css/hugo-theme.css?1625572932" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/nucleus.css?1632566036" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/fontawesome-all.min.css?1632566036" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/hybrid.css?1632566036" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/featherlight.min.css?1632566036" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/perfect-scrollbar.min.css?1632566036" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/auto-complete.css?1632566036" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/atom-one-dark-reasonable.css?1632566036" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/theme.css?1632566036" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/hugo-theme.css?1632566036" rel="stylesheet">
     
-    <link href="/scRNAseq-workshop/css/theme-red.css?1625572932" rel="stylesheet">
+    <link href="/scRNAseq-workshop/css/theme-red.css?1632566036" rel="stylesheet">
     
     
 
-    <script src="/scRNAseq-workshop/js/jquery-3.3.1.min.js?1625572932"></script>
+    <script src="/scRNAseq-workshop/js/jquery-3.3.1.min.js?1632566036"></script>
 
     <style>
       :root #header + #content > #left > #rlblock_left{
           display:none !important;
       }
+      
+        :not(pre) > code + span.copy-to-clipboard {
+            display: none;
+        }
       
     </style>
     
@@ -178,30 +182,9 @@
  
   
     
-      <li data-nav-id="/scRNAseq-workshop/introduction/05_rstudio/" title="5. Rstudio" class="dd-item ">
-        <a href="/scRNAseq-workshop/introduction/05_rstudio/">
-        5. Rstudio
-        
-        </a>
-    </li>
-     
-  
- 
-
-            
-          
-            
-            
-
-
-
-
- 
-  
-    
-      <li data-nav-id="/scRNAseq-workshop/introduction/06_contacts/" title="6. Contacts" class="dd-item ">
+      <li data-nav-id="/scRNAseq-workshop/introduction/06_contacts/" title="5. Contacts" class="dd-item ">
         <a href="/scRNAseq-workshop/introduction/06_contacts/">
-        6. Contacts
+        5. Contacts
         
         </a>
     </li>
@@ -347,37 +330,13 @@
  
   
     
-    <li data-nav-id="/scRNAseq-workshop/extra-resources/" title="Extra resources" class="dd-item
+    <li data-nav-id="/scRNAseq-workshop/useful-resources/" title="Useful resources" class="dd-item
         
         
         
         ">
-      <a href="/scRNAseq-workshop/extra-resources/">
-          Extra resources
-          
-      </a>
-      
-      
-    </li>
-  
- 
-
-          
-          
-
-
-
-
- 
-  
-    
-    <li data-nav-id="/scRNAseq-workshop/how_to_log_in_aws/" title="How to log in AWS" class="dd-item
-        
-        
-        
-        ">
-      <a href="/scRNAseq-workshop/how_to_log_in_aws/">
-          How to log in AWS
+      <a href="/scRNAseq-workshop/useful-resources/">
+          Useful resources
           
       </a>
       
@@ -430,7 +389,7 @@
         
 
 
-<h2 id="monday">Monday</h2>
+<h2 id="day-01---monday-2709">Day 01 - Monday 27/09</h2>
 <table>
 <thead>
 <tr>
@@ -443,26 +402,26 @@
 <tbody>
 <tr>
 <td>Lecture</td>
-<td>2h</td>
+<td>2h<br/>(9h30-11h20)</td>
 <td>scRNA-Seq experimental design</td>
 <td>- General introduction: cell atlas overviews<br>- Overview of available scRNA-seq technologies and experimental protocols<br>- scRNAseq processing workflow: from bcl files to fastq files to count matrix<br>- 10X Genomics quality controls</td>
 </tr>
 <tr>
 <td>Demonstration</td>
-<td>1h</td>
+<td>1h<br/>(11h30-12h30)</td>
 <td>From raw data to counts</td>
-<td>- Inspecting input files<br>- Mapping sequencing data with Cellranger<br>- Inspecting output files</td>
+<td>- Inspecting input files<br>- Preparing cellranger for scRNA-seq processing<br>- Mapping sequencing data with Cellranger<br>- Inspecting output files</td>
 </tr>
 <tr>
 <td>Homework</td>
-<td>3h</td>
+<td>3h<br/>(14h-17h)</td>
 <td>Processing raw scRNA-Seq data</td>
-<td>- Using RStudio<br>- Logging in AWS, familiarizing yourself with the course AWS instance<br>- Shell and Unix commands to navigate directories, create folders, open files<br>- Raw file formats<br>- Get data from 10x website, single cell portal, from GEO (fastqs, counts)<br>- Process fastq</td>
+<td>- Shell and Unix commands to navigate directories, create folders, open files<br>- Using R and RStudio<br>- Familiarizing yourself with R/Bioconductor<br>- Raw file formats<br>- Get data from 10x website, single cell portal, from GEO (fastqs, counts)<br>- Process fastq</td>
 </tr>
 </tbody>
 </table>
-<p>Office hours: during the last homework hour</p>
-<h2 id="tuesday">Tuesday</h2>
+<p>Office hours: during the last homework hour (16h to 17h) &ndash; <strong>Slack only</strong></p>
+<h2 id="day-02---wednesday-2909">Day 02 - Wednesday 29/09</h2>
 <table>
 <thead>
 <tr>
@@ -475,26 +434,26 @@
 <tbody>
 <tr>
 <td>Lecture</td>
-<td>2h</td>
+<td>2h<br/>(9h30-11h20)</td>
 <td>Expression QC and normalisation</td>
-<td>- Normalisation methods<br/>- Doublets, empty droplets, DropletUtils<br/>- Barcode swapping<br/>- Regression with technical covariates<br/></td>
+<td>- Doublets, empty droplets, DropletUtils<br/>- Normalisation methods<br/></td>
 </tr>
 <tr>
 <td>Demonstration</td>
-<td>1h</td>
+<td>1h<br/>(11h30-12h30)</td>
 <td>scRNAseq in R/Bioconductor: 1/3</td>
 <td>- Installing packages with CRAN and Bioconductor<br/>- Data types, data manipulation, slicing<br/>- I/O for scRNAseq analysis in R<br/>- Introducing SingleCellExperiment object</td>
 </tr>
 <tr>
 <td>Homework</td>
-<td>3h</td>
+<td>3h<br/>(14h-17h)</td>
 <td>Processing scRNAseq counts and data wrangling</td>
 <td>- Quality control of cells and genes (doublets, ambient, empty drops)<br/>- Data exploration: violin plots&hellip;<br/>- Filtering out bad cells and irrelevant genes<br/>- Count normalization</td>
 </tr>
 </tbody>
 </table>
-<p>Office hours: during the last homework hour</p>
-<h2 id="wednesday">Wednesday</h2>
+<p>Office hours: during the last homework hour (16h to 17h)</p>
+<h2 id="day-03---thursday-3009">Day 03 - Thursday 30/09</h2>
 <table>
 <thead>
 <tr>
@@ -507,26 +466,26 @@
 <tbody>
 <tr>
 <td>Lecture</td>
-<td>2h</td>
+<td>2h<br/>(9h30-11h20)</td>
 <td>Identifying cell populations</td>
 <td>- Feature selection<br/>- Dimensionality reduction<br/>- Graph-based clustering and other cluster methods</td>
 </tr>
 <tr>
 <td>Demonstration</td>
-<td>1h</td>
+<td>1h<br/>(11h30-12h30)</td>
 <td>scRNAseq in R/Bioconductor: 2/3</td>
-<td>- Parameters and clustering<br/>- Comparison of feature selection methods<br/>- Annotating clusters</td>
+<td>- Dimensionality reduction<br/>- Parameters and clustering<br/>- Annotating clusters</td>
 </tr>
 <tr>
 <td>Homework</td>
-<td>3h</td>
+<td>3h<br/>(14h-17h)</td>
 <td>Clustering analysis of scRNAseq data</td>
 <td>- Impact of feature selection approaches<br/>- Comparison of dimensionality reduction algorithms<br/>- Quality control of clustering approaches</td>
 </tr>
 </tbody>
 </table>
-<p>Office hours: during the last homework hour</p>
-<h2 id="thursday">Thursday</h2>
+<p>Office hours: during the last homework hour (16h to 17h)</p>
+<h2 id="day-04---tuesday-0510">Day 04 - Tuesday 05/10</h2>
 <table>
 <thead>
 <tr>
@@ -539,26 +498,26 @@
 <tbody>
 <tr>
 <td>Lecture</td>
-<td>2h</td>
+<td>2h<br/>(9h30-11h20)</td>
 <td>Cell type annotation &amp; batch effects</td>
 <td>- Manual vs automated cell type annotation<br/>- Batch correction methods (regress out batch, scaling within batch)<br/>- Choosing the optimal batch correction approach<br/>- Merging independant scRNAseq experiments</td>
 </tr>
 <tr>
 <td>Demonstration</td>
-<td>1h</td>
+<td>1h<br/>(11h30-12h30)</td>
 <td>scRNAseq in R/Bioconductor: 3/3</td>
-<td>- Hierarchical cell cluster annotation<br/>- Differential expression analysis of cell clusters<br/>- Integration of different scRNAseq experiments</td>
+<td>- Cell type annotation with external databases and <code>scmap</code><br/> - Integration of different scRNAseq experiments<br/></td>
 </tr>
 <tr>
 <td>Homework</td>
-<td>3h</td>
+<td>3h<br/>(14h-17h)</td>
 <td>Investigation of scRNAseq cell composition</td>
-<td>- Manual cell type annotation<br/>- Automated cell type annotation<br/>- Comparison with public databases<br/>- Multi-omic data sources</td>
+<td>- Manual cell type annotation<br/>- Automated cell type annotation<br/>- Comparison with public databases</td>
 </tr>
 </tbody>
 </table>
-<p>Office hours: during the last homework hour</p>
-<h2 id="friday">Friday</h2>
+<p>Office hours: during the last homework hour (16h to 17h)</p>
+<h2 id="day-05---thursday-0710">Day 05 - Thursday 07/10</h2>
 <table>
 <thead>
 <tr>
@@ -571,25 +530,25 @@
 <tbody>
 <tr>
 <td>Lecture</td>
-<td>2h</td>
-<td>Trajectories and pseudotimes</td>
+<td>2h<br/>(9h30-11h20)</td>
+<td>Trajectories and RNA velocity</td>
 <td>- Trajectory inference<br/>- Popular tools and packages for trajectory analysis<br/>- Pseudotime inference<br/>- RNA velocity <br/>- Differential expression through pseudotime</td>
 </tr>
 <tr>
 <td>Demonstration</td>
-<td>1h</td>
+<td>1h<br/>(11h30-12h30)</td>
 <td>Advanced scRNAseq analysis in R</td>
 <td>- Finding differentiation trajectories <br/>- Comparing multiple trajectories to each other <br/>- Computing RNA velocity</td>
 </tr>
 <tr>
 <td>Homework</td>
-<td>3h</td>
+<td>3h<br/>(14h-17h)</td>
 <td>Pseudotime analyses</td>
 <td>- Infering trajectory in sperm cell lineage<br/>- Orientating a trajectory with RNA veloctiy<br/>- Comparison of pseudotime methods<br/>- DE analysis along a trajectory</td>
 </tr>
 </tbody>
 </table>
-<p>Office hours: during the last homework hour</p>
+<p>Office hours: during the last homework hour (16h to 17h)</p>
 
 
 <footer class="footline">
@@ -723,38 +682,6 @@
             
         
                     
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
             
         
                     
@@ -869,19 +796,19 @@
     <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
       <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
     </div>
-    <script src="/scRNAseq-workshop/js/clipboard.min.js?1625572932"></script>
-    <script src="/scRNAseq-workshop/js/perfect-scrollbar.min.js?1625572932"></script>
-    <script src="/scRNAseq-workshop/js/perfect-scrollbar.jquery.min.js?1625572932"></script>
-    <script src="/scRNAseq-workshop/js/jquery.sticky.js?1625572932"></script>
-    <script src="/scRNAseq-workshop/js/featherlight.min.js?1625572932"></script>
-    <script src="/scRNAseq-workshop/js/highlight.pack.js?1625572932"></script>
+    <script src="/scRNAseq-workshop/js/clipboard.min.js?1632566036"></script>
+    <script src="/scRNAseq-workshop/js/perfect-scrollbar.min.js?1632566036"></script>
+    <script src="/scRNAseq-workshop/js/perfect-scrollbar.jquery.min.js?1632566036"></script>
+    <script src="/scRNAseq-workshop/js/jquery.sticky.js?1632566036"></script>
+    <script src="/scRNAseq-workshop/js/featherlight.min.js?1632566036"></script>
+    <script src="/scRNAseq-workshop/js/highlight.pack.js?1632566036"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-    <script src="/scRNAseq-workshop/js/modernizr.custom-3.6.0.js?1625572932"></script>
-    <script src="/scRNAseq-workshop/js/learn.js?1625572932"></script>
-    <script src="/scRNAseq-workshop/js/hugo-learn.js?1625572932"></script>
+    <script src="/scRNAseq-workshop/js/modernizr.custom-3.6.0.js?1632566036"></script>
+    <script src="/scRNAseq-workshop/js/learn.js?1632566036"></script>
+    <script src="/scRNAseq-workshop/js/hugo-learn.js?1632566036"></script>
     
         
-            <script src="/scRNAseq-workshop/mermaid/mermaid.js?1625572932"></script>
+            <script src="/scRNAseq-workshop/mermaid/mermaid.js?1632566036"></script>
         
         <script>
             mermaid.initialize({ startOnLoad: true });

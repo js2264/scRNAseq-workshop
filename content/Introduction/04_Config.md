@@ -2,16 +2,9 @@
 title: "4. Required config"
 ---
 
-## Local configuration 
+## Configuration 
 
-* Ideally (though not strictly required), a configured SSH client (it should be already installed on Linux/Mac machines, `PuTTY` can be set up for Windows). 
-* Ideally (though not strictly required), a SSH ftp client (`Forklift` is excellent for Mac, although not free beyond the trial version; `cyberduck` can be used for Windows; `FileZilla` can be used for both Mac, Windows and Linux).
-* Computer with high-speed internet access (no specific configuration required - everything will be performed on a remote AWS machine). 
-* Zoom visioconference software
-
-## Remote configuration 
-
-The AWS machine is running `Ubuntu 18.04.5 LTS` and has been set up as follows (note this is specific to `Ubuntu 18.04`):
+This is the configuration of my personal workstation (note this may be specific to `Ubuntu 18.04`):
 
 ```sh
 ## --- Clean up previous R installs
@@ -73,6 +66,7 @@ install.packages('zeallot')
 install.packages('fossil')
 install.packages('rgl', dependencies=TRUE)
 install.packages('BiocManager')
+install.packages('Seurat')
 
 ## Bioconductor Packages
 BiocManager::install('SingleCellExperiment', update = FALSE)
@@ -91,14 +85,7 @@ BiocManager::install('velociraptor', update = FALSE)
 BiocManager::install('BUSpaRse', update = FALSE)
 BiocManager::install('org.Mm.eg.db', update = FALSE)
 BiocManager::install('org.Hs.eg.db', update = FALSE)
-
-## Github Packages
-devtools::install_github('satijalab/seurat', upgrade = 'never')
-devtools::install_github('TaddyLab/maptpx')
-devtools::install_github('MacoskoLab/liger')
-devtools::install_github('velocyto-team/velocyto.R')
-devtools::install_github('theislab/destiny')
-devtools::install_github('broadinstitute/inferCNV')
+BiocManager::install(‘AnnotationHub', update = FALSE)
 "
 
 ## --- Create scRNAseq2021 conda env. and add other dependencies
@@ -111,8 +98,7 @@ conda install -c conda-forge numpy \
     scipy \
     pandas \
     matplotlib \
-    setuptools \
-    umap-learn
+    setuptools
 
 ## --- Install other softwares (fastQC, samtools, cellranger and cellranger indexes)
 conda install -c bioconda fastqc samtools

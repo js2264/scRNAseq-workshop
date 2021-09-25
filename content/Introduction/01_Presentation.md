@@ -5,7 +5,7 @@ title: "1. Presentation"
 _Jacques Serizay_  
 
 ## Dates
-TBD (around Sept./Oct. 2021)
+Sept./Oct. 2021
 
 ## Where
 

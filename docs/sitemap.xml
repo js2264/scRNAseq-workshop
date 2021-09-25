@@ -39,15 +39,11 @@
   </url>
   
   <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/day05/</loc>
-  </url>
-  
-  <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/introduction/05_rstudio/</loc>
-  </url>
-  
-  <url>
     <loc>https://js2264.github.io/scRNAseq-workshop/introduction/06_contacts/</loc>
+  </url>
+  
+  <url>
+    <loc>https://js2264.github.io/scRNAseq-workshop/day05/</loc>
   </url>
   
   <url>
@@ -55,19 +51,15 @@
   </url>
   
   <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/extra-resources/</loc>
-  </url>
-  
-  <url>
     <loc>https://js2264.github.io/scRNAseq-workshop/</loc>
   </url>
   
   <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/how_to_log_in_aws/</loc>
+    <loc>https://js2264.github.io/scRNAseq-workshop/tags/</loc>
   </url>
   
   <url>
-    <loc>https://js2264.github.io/scRNAseq-workshop/tags/</loc>
+    <loc>https://js2264.github.io/scRNAseq-workshop/useful-resources/</loc>
   </url>
   
 </urlset>

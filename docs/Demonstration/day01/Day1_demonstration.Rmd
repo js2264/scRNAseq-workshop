@@ -1,0 +1,100 @@
+---
+title: "Demonstration Day 1: From fastq to count matrix"
+output:
+  rmdformats::readthedown:
+    highlight: tango
+    css: ../../../custom.css
+    toc_depth: 3
+---
+
+**Goals:**
+
+- Refreshing your knowledge on R 
+- Introducing the `SingleCellExperiment` object and exploratory data analysis
+
+---
+
+## 1. Download sequencing reads in fastq format
+
+Here we will process a single-cell RNA-seq dataset provided by 10X Genomics, as an example.
+
+Here is the link to the dataset: 
+[link](https://www.10xgenomics.com/resources/datasets/1-k-heart-cells-from-an-e-18-mouse-v-3-chemistry-3-standard-3-0-0)
+
+This is a single-cell RNA-seq sample from mouse embryonic (E18) heart cells. Let's first download the raw fastqs. 
+
+```{sh eval = FALSE}
+mkdir -p data/E18_Heart/fastq
+curl https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_fastqs.tar data/E18_Heart/fastq/heart_1k_v3_fastqs.tar
+tar -xvf data/E18_Heart/fastq/heart_1k_v3_fastqs.tar
+mv heart_1k_v3_fastqs/ data/E18_Heart/fastq/
+ls --color -ltFh data/E18_Heart/fastq/heart_1k_v3_fastqs
+gunzip -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R1_001.fastq.gz | head
+gunzip -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R2_001.fastq.gz | head
+gunzip -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_I1_001.fastq.gz | head
+```
+
+## 2. Prepare genome for alignment
+
+Download GRCm38 genome reference and gene annotations from iGenomes to ensure that genome reference and gene annotations 
+are uniformly processed. 
+
+```{sh eval = FALSE}
+# Download files
+mkdir data/E18_Heart/GRCm38/ && cd data/E18_Heart/GRCm38
+curl http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Mus_musculus/Ensembl/GRCm38/Mus_musculus_Ensembl_GRCm38.tar.gz
+tar -xzvf Mus_musculus_Ensembl_GRCm38.tar.gz
+# Clean up gtf file to remove unscaffolded contigs
+grep -vP "^CHR|^GL|^JH" Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes.gtf > Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes_filtered.gtf
+cut -f1 Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes_filtered.gtf | uniq -c
+# Build cellranger index
+cellranger mkref \
+    --genome=GRCm38 \
+    --fasta=Mus_musculus/Ensembl/GRCm38/Sequence/WholeGenomeFasta/genome.fa \
+    --genes=Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes_filtered.gtf \
+    --nthreads=18 \
+    --memgb=40
+cd ../../../
+ls --color -lthF data/E18_Heart/GRCm38/GRCm38
+```
+
+## 3. Map reads onto 10X-formatted genome with cellranger
+
+```{sh eval = FALSE}
+mkdir -p data/E18_Heart/cellranger && cd data/E18_Heart/cellranger
+cellranger count \
+    --id=E18_Heart \
+    --transcriptome=../../../data/E18_Heart/GRCm38/GRCm38 \
+    --fastqs=../../../data/E18_Heart/fastq/heart_1k_v3_fastqs \
+    --expect-cells=1000 \
+    --localcores=18 \
+    --localmem=40
+cd ../../
+```
+
+## 4. Check output files
+
+```{sh eval = FALSE}
+ls --color -lthF data/E18_Heart/cellranger/E18_Heart/
+```
+
+We can check the `html` summary report in a web browser to get more insights about the results of the scRNAseq experiment. 
+
+```{sh eval = FALSE}
+data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_web_summary.html
+```
+
+If samtools is installed, one can also check the bam file obtained using `cellranger count` workflow. 
+
+```{sh eval = FALSE}
+samtools view data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_possorted_genome_bam.bam | head -n 10
+samtools flagstat data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_possorted_genome_bam.bam
+```
+
+The `analysis` folder contains relevant(ish) information obtained from after a rough post-alignment processing of the dataset by `cellranger`.
+
+```{sh eval = FALSE}
+tree -L 2 data/E18_Heart/cellranger/E18_Heart/analysis/
+head data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv
+cut -f 2 -d, data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv | sort | uniq -c
+```
