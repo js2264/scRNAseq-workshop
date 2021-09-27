@@ -1664,8 +1664,7 @@ font-weight: bold
 <div id="main">
 <p><strong>Goals:</strong></p>
 <ul>
-<li>Refreshing your knowledge on R</li>
-<li>Introducing the <code>SingleCellExperiment</code> object and exploratory data analysis</li>
+<li>Introduce the <code>cellranger</code> toolkit</li>
 </ul>
 <hr />
 <div id="download-sequencing-reads-in-fastq-format" class="section level2">
@@ -1713,19 +1712,35 @@ font-weight: bold
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>    <span class="ex">--localcores</span>=18 <span class="kw">\</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>    <span class="ex">--localmem</span>=40</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="bu">cd</span> ../../</span></code></pre></div>
+<p>This should appear at the end of the mapping/counting process:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co">## Outputs:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="co">## - Run summary HTML:                         E18_Heart/web_summary.html</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="co">## - Run summary CSV:                          E18_Heart/metrics_summary.csv</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="co">## - BAM:                                      E18_Heart/possorted_genome_bam.bam</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="co">## - BAM index:                                E18_Heart/possorted_genome_bam.bam.bai</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="co">## - Filtered feature-barcode matrices MEX:    E18_Heart/filtered_feature_bc_matrix</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="co">## - Filtered feature-barcode matrices HDF5:   E18_Heart/filtered_feature_bc_matrix.h5</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="co">## - Unfiltered feature-barcode matrices MEX:  E18_Heart/raw_feature_bc_matrix</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="co">## - Unfiltered feature-barcode matrices HDF5: E18_Heart/raw_feature_bc_matrix.h5</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="co">## - Secondary analysis output CSV:            E18_Heart/analysis</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="co">## - Per-molecule read information:            E18_Heart/molecule_info.h5</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a><span class="co">## - Loupe Browser file:                       E18_Heart/cloupe.cloupe</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a><span class="co">## Waiting 6 seconds for UI to do final refresh.</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a><span class="co">## Pipestance completed successfully!</span></span></code></pre></div>
 </div>
 <div id="check-output-files" class="section level2">
 <h2>4. Check output files</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="fu">ls</span> --color -lthF data/E18_Heart/cellranger/E18_Heart/</span></code></pre></div>
+<p>A description of the different output files is available <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count">here</a>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="fu">ls</span> --color -lthF data/E18_Heart/cellranger/E18_Heart/</span></code></pre></div>
 <p>We can check the <code>html</code> summary report in a web browser to get more insights about the results of the scRNAseq experiment.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ex">data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_web_summary.html</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="ex">data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_web_summary.html</span></span></code></pre></div>
 <p>If samtools is installed, one can also check the bam file obtained using <code>cellranger count</code> workflow.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="ex">samtools</span> view data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_possorted_genome_bam.bam <span class="kw">|</span> <span class="fu">head</span> -n 10</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="ex">samtools</span> flagstat data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_possorted_genome_bam.bam</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="ex">samtools</span> view data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_possorted_genome_bam.bam <span class="kw">|</span> <span class="fu">head</span> -n 10</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="ex">samtools</span> flagstat data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_possorted_genome_bam.bam</span></code></pre></div>
 <p>The <code>analysis</code> folder contains relevant(ish) information obtained from after a rough post-alignment processing of the dataset by <code>cellranger</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="ex">tree</span> -L 2 data/E18_Heart/cellranger/E18_Heart/analysis/</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="fu">head</span> data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="fu">cut</span> -f 2 -d, data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> -c</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="ex">tree</span> -L 2 data/E18_Heart/cellranger/E18_Heart/analysis/</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="fu">head</span> data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="fu">cut</span> -f 2 -d, data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> -c</span></code></pre></div>
 </div>
 </div>
 

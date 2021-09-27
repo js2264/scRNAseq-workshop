@@ -1800,7 +1800,7 @@ To get it on your local computer (to save the lectures and exercises), you can a
 <blockquote>
 <p>Do we have all the required files to run the <code>cellranger mkfastq</code> workflow? What about a samplesheet?</p>
 </blockquote>
-<p>Normally, when sequencing a library, a samplesheet is provided to the Illumina sequencing machine. In our case, we don’t have direct access to this sample sheet. Regardless, we can create one manually.</p>
+<p>Normally, when sequencing a library, a samplesheet is provided to the Illumina sequencing machine. In our case, we don’t have direct access to this sample sheet. Regardless, we can create one manually. Here are the info for the different samples which were sequenced in this toy dataset</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="bu">echo</span> <span class="st">&quot;Lane,Sample,Index</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="st">1,test_sample1,SI-GA-E3</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a><span class="st">1,test_sample2,SI-GA-F3</span></span>
@@ -1872,7 +1872,7 @@ Open the html file <code>tiny-bcl/outs/fastq_path/Reports/html/index.html</code>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a><span class="co">### Or ...</span></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a><span class="ex">tree</span> -L 4 counts/</span></code></pre></div>
 <blockquote>
-<p>Can you locate the feature-barcode matrices? What is the difference between the <code>raw_feature_bc_matrix</code> and <code>filtered_feature_bc_matrix</code> data types?</p>
+<p>Can you locate the feature-barcode matrices? What is the difference between the <code>raw_feature_bc_matrix</code> and <code>filtered_feature_bc_matrix</code> data types? In term of storage size?</p>
 </blockquote>
 <p>Now open the html file <code>counts/outs/web_summary.html</code>. Take some time to explore the gene expression matrix outputs.</p>
 <blockquote>

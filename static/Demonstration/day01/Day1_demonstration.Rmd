@@ -9,8 +9,7 @@ output:
 
 **Goals:**
 
-- Refreshing your knowledge on R 
-- Introducing the `SingleCellExperiment` object and exploratory data analysis
+- Introduce the `cellranger` toolkit
 
 ---
 
@@ -72,7 +71,29 @@ cellranger count \
 cd ../../
 ```
 
+This should appear at the end of the mapping/counting process: 
+
+```{sh eval = FALSE}
+## Outputs:
+## - Run summary HTML:                         E18_Heart/web_summary.html
+## - Run summary CSV:                          E18_Heart/metrics_summary.csv
+## - BAM:                                      E18_Heart/possorted_genome_bam.bam
+## - BAM index:                                E18_Heart/possorted_genome_bam.bam.bai
+## - Filtered feature-barcode matrices MEX:    E18_Heart/filtered_feature_bc_matrix
+## - Filtered feature-barcode matrices HDF5:   E18_Heart/filtered_feature_bc_matrix.h5
+## - Unfiltered feature-barcode matrices MEX:  E18_Heart/raw_feature_bc_matrix
+## - Unfiltered feature-barcode matrices HDF5: E18_Heart/raw_feature_bc_matrix.h5
+## - Secondary analysis output CSV:            E18_Heart/analysis
+## - Per-molecule read information:            E18_Heart/molecule_info.h5
+## - Loupe Browser file:                       E18_Heart/cloupe.cloupe
+## Waiting 6 seconds for UI to do final refresh.
+## Pipestance completed successfully!
+```
+
+
 ## 4. Check output files
+
+A description of the different output files is available [here](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count).
 
 ```{sh eval = FALSE}
 ls --color -lthF data/E18_Heart/cellranger/E18_Heart/

@@ -172,6 +172,7 @@ tree -L 4 data/bcl2fastq/cellranger-tiny-bcl-1.2.0/
 
 Normally, when sequencing a library, a samplesheet is provided to the Illumina sequencing machine. 
 In our case, we don't have direct access to this sample sheet. Regardless, we can create one manually. 
+Here are the info for the different samples which were sequenced in this toy dataset 
 
 ```{sh eval = FALSE}
 echo "Lane,Sample,Index
@@ -261,7 +262,7 @@ ls --color -ltFh counts/outs/
 tree -L 4 counts/
 ```
 
-> Can you locate the feature-barcode matrices? What is the difference between the `raw_feature_bc_matrix` and `filtered_feature_bc_matrix` data types?
+> Can you locate the feature-barcode matrices? What is the difference between the `raw_feature_bc_matrix` and `filtered_feature_bc_matrix` data types? In term of storage size? 
 
 Now open the html file `counts/outs/web_summary.html`. Take some time to explore the gene expression matrix outputs.
 
