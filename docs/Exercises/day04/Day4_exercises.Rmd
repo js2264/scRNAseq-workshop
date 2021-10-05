@@ -41,8 +41,8 @@ genes <- gtf %>%
     filter(gene_source == 'ensembl_havana')
 
 # Annotate genes in PBMC dataset and filter out non-relevant genes
-pbmc <- pbmc[genes$gene_id[genes$gene_id %in% rownames(pbmc)], ]
-rowRanges(pbmc) <- genes[match(rownames(pbmc), genes$gene_id)]
+pbmc <- pbmc[genes$gene_name[genes$gene_name %in% rownames(pbmc)], ]
+rowRanges(pbmc) <- genes[match(rownames(pbmc), genes$gene_name)]
 rowData(pbmc) <- rowData(pbmc)[, c('gene_name', 'gene_id')]
 rownames(pbmc) <- scuttle::uniquifyFeatureNames(rowData(pbmc)$gene_id, rowData(pbmc)$gene_name)
 
