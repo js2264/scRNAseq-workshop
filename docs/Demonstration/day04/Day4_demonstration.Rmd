@@ -16,9 +16,8 @@ output:
 --- 
 
 ```{r eval = FALSE, include = FALSE}
-MCCs <- readRDS('/home/rsg/Projects/20210421_MCCs_WT-pseudotime/results/MCCs-with-pseudotimes_withUnannot.rds')
+MCCs <- readRDS('/home/rsg/Projects/20210421_MCCs_WT-pseudotime/results/WTs-with-pseudotimes_withUnannot.rds')
 CcnoKO <- readRDS('~/Projects/20210324_Ccno-WT-projection/_results-files/CcnoKO_extrapolated-UMAP-annots-pseudotimes.rds')
-CcnoKO <- CcnoKO
 colData(MCCs) <- colData(MCCs)[, c(2, 22, 3, 4, 5, 6, 15, 20, 26)]
 colData(MCCs)$pseudotime <- colData(MCCs)$pseudotime_slingshot
 colData(MCCs)$pseudotime_slingshot <- NULL
@@ -45,7 +44,7 @@ saveRDS(CcnoKO, 'data/MCCs/CcnoKO.rds')
 
 ## 1. Integrating two replicates together
 
-Let's process both WT datasets independantly
+We have sequenced 2 replicates of WT cells differentiated into MCCs. Let's process both datasets independantly.
 
 ```{r eval = FALSE}
 library(SingleCellExperiment)
@@ -88,6 +87,7 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(Bl6N_WT, 'UMAP', colour_by = 'cluster', text_by = 'cluster') + ggtitle('Bl6N_WT'),
     scater::plotReducedDim(Bl6J_WT, 'UMAP', colour_by = 'cluster', text_by = 'cluster') + ggtitle('Bl6J_WT')
 )
+ggsave('data/MCCs/WT-replicates_UMAP.pdf', w = 10, h = 5)
 ```
 
 Process them together without genotype correction 
@@ -120,9 +120,10 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(MCCs, 'UMAP', colour_by = 'cluster', text_by = 'cluster') + ggtitle('MCCs'),
     scater::plotReducedDim(MCCs, 'UMAP', colour_by = 'batch', text_by = 'cluster') + ggtitle('Genotype')
 )
+ggsave('data/MCCs/WT-replicates-merged_UMAP.pdf', w = 10, h = 5)
 ```
 
-Now correct for genotype!
+Now let's do it again, but correcting for genotype. 
 
 ```{r eval = FALSE}
 set.seed(1000)
@@ -146,6 +147,7 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(MCCs, 'corrected_UMAP', colour_by = 'batch', text_by = 'batch') + ggtitle('Genotype'),
     scater::plotReducedDim(MCCs, 'corrected_UMAP', colour_by = 'corrected_cluster', text_by = 'corrected_cluster') + ggtitle('MCCs')
 )
+ggsave('data/MCCs/WT-replicates-corrected_UMAP.pdf', w = 10, h = 10)
 ```
 
 ## 2. Reading CcnoKO dataset in R 
@@ -177,6 +179,7 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(CcnoKO, 'UMAP', colour_by = 'cluster', text_by = 'cluster') + ggtitle('CcnoKO'),
     scater::plotReducedDim(CcnoKO, 'UMAP', colour_by = 'batch', text_by = 'cluster') + ggtitle('Genotype')
 )
+ggsave('data/MCCs/CcnoKO_UMAP.pdf', w = 10, h = 5)
 ```
 
 ## 3. Annotating CcnoKO dataset with WT MCCs dataset using `scmap`
@@ -211,6 +214,7 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(MCCs, 'UMAP', colour_by = 'annotation', text_by = 'annotation') + ggtitle('MCCs'),
     ncol = 2
 )
+ggsave('data/MCCs/CcnoKO-transferred-annotations_UMAP.pdf', w = 10, h = 10)
 ```
 
 ## 4. Mapping CcnoKO onto WT MCCs cells
@@ -228,6 +232,7 @@ onto WT MCC UMAP embedding.
 ```{r eval = FALSE}
 # Re-process each dataset separately with Seurat
 library(Seurat)
+options(future.globals.maxSize= 891289600)
 MCCs_seurat <- as.Seurat(MCCs) %>% 
     NormalizeData() %>%
     FindVariableFeatures(selection.method = "vst", nfeatures = 2000) %>% 
@@ -269,4 +274,5 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(CcnoKO, 'learnt_UMAP', colour_by = 'annotation_projected', text_by = 'annotation_projected') + ggtitle('CcnoKO, learnt UMAP'),
     ncol = 2
 )
+ggsave('data/MCCs/CcnoKO-projected_UMAP.pdf', w = 10, h = 10)
 ```

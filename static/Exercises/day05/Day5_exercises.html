@@ -1535,12 +1535,39 @@ src: url(data:application/font-sfnt;base64,AAEAAAARAQAABAAQR0RFRgs+Cz8AAjwQAAAAQ
         <style type="text/css">pre {
 background-color: #e3e3e3
 }
-#content pre.sourceCode.sh {
-background-color: #f8ffff;
-}
-#content pre.sourceCode.r {
-background-color: #f3f3f3;
+#content pre.sourceCode {
+background-color: #f8f8f8;
 border: 1px solid black;
+}
+#content pre.sourceCode.r::before {
+font-size: small;
+font-weight: 200;
+color: rgb(90, 1, 1);
+content: "{R} \a";
+margin: -10px -10px 10px -3px;
+display: block;
+
+}
+#content pre.sourceCode.sh::before {
+font-size: small;
+font-weight: 200;
+color: rgb(0, 31, 78);
+content: "{sh} \a";
+margin: -10px -10px 10px -3px;
+display: block;
+
+}
+.bash > span::before {
+font-size: small;
+font-weight: 200;
+color: rgb(0, 31, 78);
+content: "> ";
+}
+.r > span::before {
+font-size: small;
+font-weight: 200;
+color: rgb(90, 1, 1);
+content: "> ";
 }
 summary {
 color: #ff7f00;
@@ -2073,26 +2100,30 @@ What do you observe? Discuss.</p>
 <h2>3. Ordering trajectory with RNA velocity</h2>
 <p>As we saw earlier, TI does not necessarily know which direction is right for a given trajectory. This can be safely estimated using RNA velocity. For a given gene, a high ratio of unspliced to spliced transcripts indicates that that gene is being actively upregulated. Conversely, a low ratio indicates that the gene is being downregulated as the rate of production and processing of pre-mRNAs cannot compensate for the degradation of mature transcripts. Thus, we can infer that cells with high and low ratios are moving towards a high- and low-expression state, respectively, allowing us to assign directionality to trajectories or even individual cells.</p>
 <blockquote>
-<p>Read <code>velociraptor</code> documentation. What do you need to compute RNA velocity scores in R? Import <code>spliced</code> and <code>unspliced</code> counts computed with <code>velocyto</code> in R. Try and compute RNA velocity. What do you see? Does this help inferring direction of the trajectory?</p>
+<p>Read <code>velociraptor</code> documentation. What do you need to compute RNA velocity scores in R? Import <code>spliced</code> and <code>unspliced</code> counts computed with <code>velocyto</code> in R. Try and compute RNA velocity (on germcells only). What do you see?</p>
 </blockquote>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>looms &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;data/Guo_testis/testis_velocity-counts.rds&#39;</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="kw">assays</span>(looms)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="kw">assay</span>(testis, <span class="st">&#39;spliced&#39;</span>, <span class="dt">withDimnames=</span><span class="ot">FALSE</span>) &lt;-<span class="st"> </span><span class="kw">assay</span>(looms, <span class="st">&#39;spliced&#39;</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="kw">assay</span>(testis, <span class="st">&#39;unspliced&#39;</span>, <span class="dt">withDimnames=</span><span class="ot">FALSE</span>) &lt;-<span class="st"> </span><span class="kw">assay</span>(looms, <span class="st">&#39;unspliced&#39;</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>velo_out &lt;-<span class="st"> </span>velociraptor<span class="op">::</span><span class="kw">scvelo</span>(</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>    testis, </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>    <span class="dt">assay.X =</span> <span class="st">&quot;counts&quot;</span>, </span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>    <span class="dt">subset.row =</span> <span class="kw">rowData</span>(testis)<span class="op">$</span>isHVG, </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>    <span class="dt">use.dimred =</span> <span class="st">&quot;corrected&quot;</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a>)</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a>embedded_velo &lt;-<span class="st"> </span>velociraptor<span class="op">::</span><span class="kw">embedVelocity</span>(<span class="kw">reducedDim</span>(testis, <span class="st">&quot;TSNE&quot;</span>), velo_out)</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a>grid.df &lt;-<span class="st"> </span>velociraptor<span class="op">::</span><span class="kw">gridVectors</span>(<span class="kw">reducedDim</span>(testis, <span class="st">&quot;TSNE&quot;</span>), embedded_velo, <span class="dt">resolution =</span> <span class="dv">30</span>)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true"></a>p &lt;-<span class="st"> </span>scater<span class="op">::</span><span class="kw">plotReducedDim</span>(testis, <span class="st">&#39;TSNE&#39;</span>, <span class="dt">colour_by =</span> <span class="st">&quot;annotation&quot;</span>, <span class="dt">point_alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_segment</span>(</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true"></a>        <span class="dt">data =</span> grid.df, </span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true"></a>        <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> start<span class="fl">.1</span>, <span class="dt">y =</span> start<span class="fl">.2</span>, <span class="dt">xend =</span> end<span class="fl">.1</span>, <span class="dt">yend =</span> end<span class="fl">.2</span>), </span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true"></a>        <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.05</span>, <span class="st">&quot;inches&quot;</span>), <span class="dt">type =</span> <span class="st">&quot;closed&quot;</span>)</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true"></a>    )</span></code></pre></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="kw">rownames</span>(looms) &lt;-<span class="st"> </span><span class="kw">rowData</span>(looms)<span class="op">$</span>Gene</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>testis &lt;-<span class="st"> </span>testis[<span class="kw">rownames</span>(looms), ]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="kw">assay</span>(testis, <span class="st">&#39;spliced&#39;</span>, <span class="dt">withDimnames=</span><span class="ot">FALSE</span>) &lt;-<span class="st"> </span><span class="kw">assay</span>(looms, <span class="st">&#39;spliced&#39;</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a><span class="kw">assay</span>(testis, <span class="st">&#39;unspliced&#39;</span>, <span class="dt">withDimnames=</span><span class="ot">FALSE</span>) &lt;-<span class="st"> </span><span class="kw">assay</span>(looms, <span class="st">&#39;unspliced&#39;</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>germcells &lt;-<span class="st"> </span>testis[, testis<span class="op">$</span>annotation <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Spermatogonia&quot;</span>, <span class="st">&quot;Spermatocytes&quot;</span>, <span class="st">&quot;Early spermatids&quot;</span>, <span class="st">&quot;Late spermatids&quot;</span>)]</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>velo_out &lt;-<span class="st"> </span>velociraptor<span class="op">::</span><span class="kw">scvelo</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>    germcells, </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a>    <span class="dt">assay.X =</span> <span class="st">&quot;counts&quot;</span>, </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a>    <span class="dt">use.dimred =</span> <span class="st">&quot;corrected&quot;</span>, </span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a>    <span class="dt">subset.row =</span> scran<span class="op">::</span><span class="kw">getTopHVGs</span>(scran<span class="op">::</span><span class="kw">modelGeneVar</span>(germcells), <span class="dt">prop =</span> <span class="fl">0.1</span>), </span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true"></a>    <span class="dt">mode =</span> <span class="st">&#39;dynamical&#39;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true"></a>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true"></a>embedded_velo &lt;-<span class="st"> </span>velociraptor<span class="op">::</span><span class="kw">embedVelocity</span>(<span class="kw">reducedDim</span>(germcells, <span class="st">&quot;TSNE&quot;</span>), velo_out)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true"></a>grid.df &lt;-<span class="st"> </span>velociraptor<span class="op">::</span><span class="kw">gridVectors</span>(<span class="kw">reducedDim</span>(germcells, <span class="st">&quot;TSNE&quot;</span>), embedded_velo, <span class="dt">resolution =</span> <span class="dv">30</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true"></a>p &lt;-<span class="st"> </span>scater<span class="op">::</span><span class="kw">plotReducedDim</span>(germcells, <span class="st">&#39;TSNE&#39;</span>, <span class="dt">colour_by =</span> <span class="st">&quot;annotation&quot;</span>, <span class="dt">point_alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true"></a><span class="st">    </span><span class="kw">geom_segment</span>(</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true"></a>        <span class="dt">data =</span> grid.df, </span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true"></a>        <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> start<span class="fl">.1</span>, <span class="dt">y =</span> start<span class="fl">.2</span>, <span class="dt">xend =</span> end<span class="fl">.1</span>, <span class="dt">yend =</span> end<span class="fl">.2</span>), </span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true"></a>        <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.05</span>, <span class="st">&quot;inches&quot;</span>), <span class="dt">type =</span> <span class="st">&quot;closed&quot;</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true"></a>    )</span></code></pre></div>
 </div>
 </div>
 

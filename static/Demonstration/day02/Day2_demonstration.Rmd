@@ -91,10 +91,15 @@ genes
 All these operations are performed using verbs (most of them provided by the `dplyr` package, part of `tidyverse`). 
 
 ```{r eval = FALSE}
+# `slice` extract certain *rows* by integer location
 slice(genes, 1:4)
+slice_head(genes)
+slice_sample(genes, n = 10)
+# `filter` subsets the tibble, retaining all rows that satisfy your condition(s)
 filter(genes, Symbol == 'CCDC67')
 filter(genes, grepl('^CCDC.*', Symbol))
 filter(genes, grepl('^CCDC.*', Symbol), grepl('.*5$', Symbol))
+# `select` extract `columns` by integer location, name, or pattern...
 select(genes, 1)
 select(genes, ID)
 select(genes, matches('Sym.*'))
@@ -103,6 +108,7 @@ select(genes, matches('Sym.*'))
 Columns can also be quickly added/modified using the `mutate` verb. 
 
 ```{r eval = FALSE}
+# `mutate` adds a new column
 mutate(genes, chr = sample(1:22, n(), replace = TRUE))
 ```
 
@@ -164,6 +170,10 @@ colData(airway)
 ```{r eval = FALSE}
 untreated_LRG <- airway[grepl('^LRG_', rownames(airway)), airway$dex == 'untrt']
 untreated_LRG
+# Using tidyverse-like expression leveraging `tidySummarizedExperiment` pacakge: 
+library(tidySummarizedExperiment)
+airway
+filter(airway, dex == 'untrt', grepl('^LRG_',  feature))
 ```
 
 ### `GenomicRanges` class (a.k.a. `GRanges`): 
@@ -223,6 +233,8 @@ Notably, several packages are increasingly becoming central for single-cell anal
 Let's load a fully-fleged `SingleCellExperiment` object, so we can play around with it:
 
 ```{r eval = FALSE}
+library(SingleCellExperiment)
+library(tidySingleCellExperiment)
 sce <- readRDS(url('https://github.com/js2264/scRNAseq-workshop/raw/main/pbmc3k.rds'), "rb")
 class(sce)
 sce

@@ -13,7 +13,7 @@ sudo apt autoremove
 sudo apt update
 sudo apt upgrade
 
-## --- Libraries
+## --- Install important libraries
 sudo apt update
 sudo apt install libc6 libicu66 libreadline8 -y 
 sudo apt install -y \
@@ -39,13 +39,12 @@ sudo apt install -y \
     libmagick++-dev \
     libharfbuzz-dev libfribidi-dev
 
-## --- R base install 
+## --- R 4.1.2 install 
 sudo add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/'
 add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu `lsb_release -cs` -cran40/"
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 sudo apt update
-sudo apt install \
-    r-base r-recommended r-base-core r-base-dev
+sudo apt install r-base r-recommended r-base-core r-base-dev
 ```
 
 The following packages have been installed (along with their many dependencies, of course!): 
@@ -53,46 +52,47 @@ The following packages have been installed (along with their many dependencies, 
 ```sh
 ## --- Install important R packages for single-cell RNA-seq projects
 Rscript -e "
-## CRAN packages
-install.packages('tidyverse')
-install.packages('devtools')
-install.packages('umap')
-install.packages('corrplot')
-install.packages('gam')
-install.packages('ggbeeswarm')
-install.packages('ggthemes')
-install.packages('Matrix')
-install.packages('zeallot')
-install.packages('fossil')
-install.packages('rgl', dependencies=TRUE)
-install.packages('BiocManager')
-install.packages('Seurat')
+install.packages('tidyverse');
+install.packages('devtools');
+install.packages('reticulate');
+install.packages('umap');
+install.packages('corrplot');
+install.packages('gam');
+install.packages('ggbeeswarm');
+install.packages('ggthemes');
+install.packages('Matrix');
+install.packages('zeallot');
+install.packages('fossil');
+install.packages('rgl', dependencies=TRUE);
+install.packages('BiocManager');
+install.packages('Seurat');
 
 ## Bioconductor Packages
-BiocManager::install('SingleCellExperiment', update = FALSE)
-BiocManager::install('scran', update = FALSE)
-BiocManager::install('scater', update = FALSE)
-BiocManager::install('batchelor', update = FALSE)
-BiocManager::install('DropletUtils', update = FALSE)
-BiocManager::install('AUCell', update = FALSE)
-BiocManager::install('plyranges', update = FALSE)
-BiocManager::install('SingleR', update = FALSE)
-BiocManager::install('slingshot', update = FALSE)
-BiocManager::install('tradeSeq', update = FALSE)
-BiocManager::install('clusterExperiment', update = FALSE)
-BiocManager::install('CountClust', update = FALSE)
-BiocManager::install('velociraptor', update = FALSE)
-BiocManager::install('BUSpaRse', update = FALSE)
-BiocManager::install('org.Mm.eg.db', update = FALSE)
-BiocManager::install('org.Hs.eg.db', update = FALSE)
-BiocManager::install(‘AnnotationHub', update = FALSE)
+BiocManager::install('SingleCellExperiment', update = FALSE);
+BiocManager::install('scran', update = FALSE);
+BiocManager::install('scater', update = FALSE);
+BiocManager::install('batchelor', update = FALSE);
+BiocManager::install('DropletUtils', update = FALSE);
+BiocManager::install('scmap', update = FALSE);
+BiocManager::install('AUCell', update = FALSE);
+BiocManager::install('plyranges', update = FALSE);
+BiocManager::install('SingleR', update = FALSE);
+BiocManager::install('slingshot', update = FALSE);
+BiocManager::install('tradeSeq', update = FALSE);
+BiocManager::install('clusterExperiment', update = FALSE);
+BiocManager::install('CountClust', update = FALSE);
+BiocManager::install('velociraptor', update = FALSE);
+BiocManager::install('BUSpaRse', update = FALSE);
+BiocManager::install('org.Mm.eg.db', update = FALSE);
+BiocManager::install('org.Hs.eg.db', update = FALSE);
+BiocManager::install(‘AnnotationHub', update = FALSE);
 "
 
-## --- Create scRNAseq2021 conda env. and add other dependencies
-sudo R --no-save -e "reticulate::install_miniconda()"
-sudo R --no-save -e "reticulate::conda_create(envname = 'scRNAseq2021)"
+## --- Create scRNAseq2022 conda env. and add other dependencies
+R --no-save -e "reticulate::install_miniconda()"
+R --no-save -e "reticulate::conda_create(envname = 'scRNAseq2022')"
 conda init bash
-conda activate scRNAseq2021
+conda activate scRNAseq2022
 conda install -c conda-forge python=3 umap-learn leidenalg -y
 conda install -c conda-forge numpy \
     scipy \
@@ -102,10 +102,12 @@ conda install -c conda-forge numpy \
 
 ## --- Install other softwares (fastQC, samtools, cellranger and cellranger indexes)
 conda install -c bioconda fastqc samtools
+# Follow instructions to install Cellranger: 
+#       https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation
 cd /opt/
-sudo wget -O cellranger-6.0.1.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.0.1.tar.gz?Expires=1622001486&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjAuMS50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2MjIwMDE0ODZ9fX1dfQ__&Signature=IWM4eRXo7G4YRXjOrcTFKscHWsa5sU6bqrIFrWOyzkV0pzOb0OPrjI7uMtoorqV6ivIjKbE21F9PkfajqV77hfODzCIyOmVQWxi9~nV2vZ6fdmo80hB4xmFQ7RdmLNAS~MDrhAg8etcQ-VkPS6wbzwtfNai-jDfRaas7DNPcq5CtFA4UBtfMG51XTpfPFKHDt66QWQOKShD5JNi05Cq4mDcWfJD1EFC-Z5b0Nid416NeLtxzUjNl043VRpWk2EibNGn8s8qGO0Kk~5Uh1l-qW~KkLSPVv5QFWj5wAgPjC3At2bCqjBaD6c87lIcHKx7WTPv46-d-gdQvYg-ZRcmBPQ__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
-sudo tar -xzvf cellranger-6.0.1.tar.gz
-sudo wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz
+#[ download file from downloads page ]
+sudo tar -xzvf cellranger-6.1.2.tar.gz
+#[ download file from downloads page ]
 sudo tar -xzvf refdata-gex-mm10-2020-A.tar.gz
 ```
 

@@ -30,7 +30,8 @@ Importing 10X Genomics scRNAseq data in R can be done using `DropletUtils` packa
 dir.create('data/E18_Heart/cellranger/E18_Heart/')
 download.file(
     url = 'https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_filtered_feature_bc_matrix.h5', 
-    destfile = 'data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_filtered_feature_bc_matrix.h5'
+    destfile = 'data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_filtered_feature_bc_matrix.h5',
+    mode = 'wb'
 )
 heart <- DropletUtils::read10xCounts('data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_filtered_feature_bc_matrix.h5')
 ```
@@ -155,7 +156,8 @@ ambient RNA contamination and then (2) compute a probability that each droplet c
 ```{r eval = FALSE}
 download.file(
     url = 'https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_raw_feature_bc_matrix.h5', 
-    destfile = 'data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_raw_feature_bc_matrix.h5'
+    destfile = 'data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_raw_feature_bc_matrix.h5', 
+    mode = 'wb'
 )
 heart_raw <- DropletUtils::read10xCounts('data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_raw_feature_bc_matrix.h5')
 heart_raw

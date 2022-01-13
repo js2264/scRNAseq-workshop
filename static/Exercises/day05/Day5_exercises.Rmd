@@ -471,22 +471,26 @@ allowing us to assign directionality to trajectories or even individual cells.
 
 > Read `velociraptor` documentation. What do you need to compute RNA velocity scores in R? 
 > Import `spliced` and `unspliced` counts computed with `velocyto` in R. 
-> Try and compute RNA velocity. What do you see? Does this help inferring direction of the trajectory? 
+> Try and compute RNA velocity (on germcells only). What do you see? 
 
 ```{r eval = FALSE}
 looms <- readRDS('data/Guo_testis/testis_velocity-counts.rds')
 assays(looms)
+rownames(looms) <- rowData(looms)$Gene
+testis <- testis[rownames(looms), ]
 assay(testis, 'spliced', withDimnames=FALSE) <- assay(looms, 'spliced')
 assay(testis, 'unspliced', withDimnames=FALSE) <- assay(looms, 'unspliced')
+germcells <- testis[, testis$annotation %in% c("Spermatogonia", "Spermatocytes", "Early spermatids", "Late spermatids")]
 velo_out <- velociraptor::scvelo(
-    testis, 
+    germcells, 
     assay.X = "counts", 
-    subset.row = rowData(testis)$isHVG, 
-    use.dimred = "corrected"
+    use.dimred = "corrected", 
+    subset.row = scran::getTopHVGs(scran::modelGeneVar(germcells), prop = 0.1), 
+    mode = 'dynamical'
 )
-embedded_velo <- velociraptor::embedVelocity(reducedDim(testis, "TSNE"), velo_out)
-grid.df <- velociraptor::gridVectors(reducedDim(testis, "TSNE"), embedded_velo, resolution = 30)
-p <- scater::plotReducedDim(testis, 'TSNE', colour_by = "annotation", point_alpha = 0.5) +
+embedded_velo <- velociraptor::embedVelocity(reducedDim(germcells, "TSNE"), velo_out)
+grid.df <- velociraptor::gridVectors(reducedDim(germcells, "TSNE"), embedded_velo, resolution = 30)
+p <- scater::plotReducedDim(germcells, 'TSNE', colour_by = "annotation", point_alpha = 0.5) +
     geom_segment(
         data = grid.df, 
         mapping = aes(x = start.1, y = start.2, xend = end.1, yend = end.2), 

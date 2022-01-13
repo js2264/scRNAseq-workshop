@@ -10,7 +10,7 @@ title: "2. Program"
 | Demonstration | 1h<br/>(11h30-12h30) | From raw data to counts | - Inspecting input files<br>- Preparing cellranger for scRNA-seq processing<br>- Mapping sequencing data with Cellranger<br>- Inspecting output files |
 | Homework | 3h<br/>(14h-17h) | Processing raw scRNA-Seq data | - Shell and Unix commands to navigate directories, create folders, open files<br>- Using R and RStudio<br>- Familiarizing yourself with R/Bioconductor<br>- Raw file formats<br>- Get data from 10x website, single cell portal, from GEO (fastqs, counts)<br>- Process fastq |
 
-Office hours: during the last homework hour (16h to 17h) -- **Slack only**
+Office hours: during the last homework hour (16h to 17h)
 
 ## Day 02 - Wednesday 29/09
 

@@ -1535,12 +1535,39 @@ src: url(data:application/font-sfnt;base64,AAEAAAARAQAABAAQR0RFRgs+Cz8AAjwQAAAAQ
         <style type="text/css">pre {
 background-color: #e3e3e3
 }
-#content pre.sourceCode.sh {
-background-color: #f8ffff;
-}
-#content pre.sourceCode.r {
-background-color: #f3f3f3;
+#content pre.sourceCode {
+background-color: #f8f8f8;
 border: 1px solid black;
+}
+#content pre.sourceCode.r::before {
+font-size: small;
+font-weight: 200;
+color: rgb(90, 1, 1);
+content: "{R} \a";
+margin: -10px -10px 10px -3px;
+display: block;
+
+}
+#content pre.sourceCode.sh::before {
+font-size: small;
+font-weight: 200;
+color: rgb(0, 31, 78);
+content: "{sh} \a";
+margin: -10px -10px 10px -3px;
+display: block;
+
+}
+.bash > span::before {
+font-size: small;
+font-weight: 200;
+color: rgb(0, 31, 78);
+content: "> ";
+}
+.r > span::before {
+font-size: small;
+font-weight: 200;
+color: rgb(90, 1, 1);
+content: "> ";
 }
 summary {
 color: #ff7f00;
@@ -1696,9 +1723,10 @@ Import it into <code>R</code> using <code>read10xCounts()</code> function.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">dir.create</span>(<span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/&#39;</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">download.file</span>(</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>    <span class="dt">url =</span> <span class="st">&#39;https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_filtered_feature_bc_matrix.h5&#39;</span>, </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>    <span class="dt">destfile =</span> <span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_filtered_feature_bc_matrix.h5&#39;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>heart &lt;-<span class="st"> </span>DropletUtils<span class="op">::</span><span class="kw">read10xCounts</span>(<span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_filtered_feature_bc_matrix.h5&#39;</span>)</span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>    <span class="dt">destfile =</span> <span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_filtered_feature_bc_matrix.h5&#39;</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>    <span class="dt">mode =</span> <span class="st">&#39;wb&#39;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>heart &lt;-<span class="st"> </span>DropletUtils<span class="op">::</span><span class="kw">read10xCounts</span>(<span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_filtered_feature_bc_matrix.h5&#39;</span>)</span></code></pre></div>
 <blockquote>
 <p>How many cells were sequenced in this dataset? How many genes are profiled?<br />
 What is the distribution of genes being detected per cell, and of number of unique transcripts being detected per cell? And for each gene, what is the distribution of number of cells it is detected in? Use QC functions from the <code>scuttle</code> package to automatically compute these metrics.<br />
@@ -1799,11 +1827,12 @@ Comment the difference. Again, what are the important differences in term of sin
 </blockquote>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">download.file</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>    <span class="dt">url =</span> <span class="st">&#39;https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_raw_feature_bc_matrix.h5&#39;</span>, </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>    <span class="dt">destfile =</span> <span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_raw_feature_bc_matrix.h5&#39;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>heart_raw &lt;-<span class="st"> </span>DropletUtils<span class="op">::</span><span class="kw">read10xCounts</span>(<span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_raw_feature_bc_matrix.h5&#39;</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>heart_raw</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a><span class="kw">dim</span>(heart_raw)</span></code></pre></div>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>    <span class="dt">destfile =</span> <span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_raw_feature_bc_matrix.h5&#39;</span>, </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>    <span class="dt">mode =</span> <span class="st">&#39;wb&#39;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>heart_raw &lt;-<span class="st"> </span>DropletUtils<span class="op">::</span><span class="kw">read10xCounts</span>(<span class="st">&#39;data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_raw_feature_bc_matrix.h5&#39;</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>heart_raw</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a><span class="kw">dim</span>(heart_raw)</span></code></pre></div>
 <blockquote>
 <p>Use <code>emptyDrops()</code> to differentiate empty droplets from cell-containing droplets.</p>
 </blockquote>

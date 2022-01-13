@@ -5,7 +5,8 @@ title: "1. Presentation"
 _Jacques Serizay_  
 
 ## Dates
-Sept./Oct. 2021
+
+Jan./Feb. 2022
 
 ## Where
 
@@ -35,7 +36,7 @@ and the different packages which will be used to analyse datasets and learn new 
 The course is structured in modules over five days.  
 
 During the first 1/3 of the day, formal lectures will cover the key 
-concepts required to understand the principles scRNA-seq analysis (~2h).
+concepts required to understand the principles of scRNA-seq analysis (~2h).
 
 Following these lectures, practical examples will be shown to illustrate how 
 to translate the acquired knowledge into functional `R` code (~1h). At this stage, 
@@ -44,8 +45,8 @@ as well as the best practices in bioinformatics.
 
 During the second half of the day (3h), trainees will work by themselves, following 
 guided exercises to improve their understanding of scRNAseq analysis workflow.
-A "solution" for each exercise will be provided once the exercises are finished. 
-The exercises will mainly focus on specific concepts introducted earlier that day.
+Hints and solution are provided for each exercise. The exercises will mainly focus 
+on specific concepts introducted earlier that day.
 However, analytical steps studied throughout the previous days will also 
 be integrated so that towards the end of the week, trainees are fully able 
 to perform fundamental scRNAseq analyses from beginning to end. 

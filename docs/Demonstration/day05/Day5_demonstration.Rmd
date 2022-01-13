@@ -44,20 +44,21 @@ mergedBatches <- batchelor::fastMNN(
 reducedDim(MCCs, 'corrected_PCA') <- reducedDim(mergedBatches, 'corrected')
 MCCs$corrected_cluster <- factor(igraph::cluster_louvain(scran::buildSNNGraph(MCCs, use.dimred = 'corrected_PCA'))$membership)
 reducedDim(MCCs, 'corrected_UMAP') <- scater::calculateUMAP(t(reducedDim(MCCs, 'corrected_PCA')))
+saveRDS(MCCs, 'data/MCCs/WTs_processed.rds')
 
 CcnoKO <- readRDS('data/MCCs/CcnoKO.rds')
-# cnts <- as(assay(CcnoKO, 'counts'), 'dgCMatrix')
-# colnames(cnts) <- CcnoKO$Barcode
-# rownames(cnts) <- rownames(CcnoKO)
-# CcnoKO_vst <- sctransform::vst(cnts, return_cell_attr = TRUE, verbosity = 0)
-# CcnoKO <- CcnoKO[rownames(CcnoKO_vst$y), ]
-# assay(CcnoKO, 'corrected_counts', withDimnames = FALSE) <- sctransform::correct(CcnoKO_vst, verbosity = 0)
-# assay(CcnoKO, 'logcounts', withDimnames = FALSE) <- log1p(assay(CcnoKO, 'corrected_counts'))
-# CcnoKO_variance <- scran::modelGeneVar(CcnoKO)
-# HVGs <- scran::getTopHVGs(CcnoKO_variance, prop = 0.1)
-# rowData(CcnoKO)$HVG <- rownames(CcnoKO) %in% HVGs
-# CcnoKO <- scran::denoisePCA(CcnoKO, technical = CcnoKO_variance, subset.row = HVGs, min.rank = 50)
-# CcnoKO <- scater::runUMAP(CcnoKO)
+cnts <- as(assay(CcnoKO, 'counts'), 'dgCMatrix')
+colnames(cnts) <- CcnoKO$Barcode
+rownames(cnts) <- rownames(CcnoKO)
+CcnoKO_vst <- sctransform::vst(cnts, return_cell_attr = TRUE, verbosity = 0)
+CcnoKO <- CcnoKO[rownames(CcnoKO_vst$y), ]
+assay(CcnoKO, 'corrected_counts', withDimnames = FALSE) <- sctransform::correct(CcnoKO_vst, verbosity = 0)
+assay(CcnoKO, 'logcounts', withDimnames = FALSE) <- log1p(assay(CcnoKO, 'corrected_counts'))
+CcnoKO_variance <- scran::modelGeneVar(CcnoKO)
+HVGs <- scran::getTopHVGs(CcnoKO_variance, prop = 0.1)
+rowData(CcnoKO)$HVG <- rownames(CcnoKO) %in% HVGs
+CcnoKO <- scran::denoisePCA(CcnoKO, technical = CcnoKO_variance, subset.row = HVGs, min.rank = 50)
+CcnoKO <- scater::runUMAP(CcnoKO)
 
 rowData(MCCs)$feature_symbol <- rowData(MCCs)$Symbol
 MCCs <- scmap::selectFeatures(MCCs, suppress_plot = TRUE)
@@ -68,11 +69,15 @@ CcnoKO_scmap_clus <- scmap::scmapCluster(
     index_list = list(yan = metadata(MCCs)$scmap_cluster_index)
 )
 CcnoKO$annotation <- factor(CcnoKO_scmap_clus$combined_labs, levels = levels(MCCs$annotation))
+saveRDS(CcnoKO, 'data/MCCs/CcnoKO_processed.rds')
 ```
 
 ## 1. Trajectories in WT MCCs
 
 ```{r eval = FALSE}
+# Load data 
+MCCs <- readRDS('data/MCCs/MCCs_processed.rds')
+CcnoKO <- readRDS('data/MCCs/CcnoKO_processed.rds')
 # Infer lineages 
 library(slingshot)
 MCCs_slingshot <- slingshot(
@@ -103,16 +108,23 @@ p <- cowplot::plot_grid(
             inherit.aes = FALSE, size = 2
         )
 )
+ggsave('data/MCCs/WTs-trajectories.pdf', w = 10, h = 5)
 ```
 
 ## 2. Infer a single trajectory for WT + CcnoKO MCCs
 
 ```{r eval = FALSE}
+Bl6J_WT <- readRDS('data/MCCs/Bl6J_WT.rds')
+Bl6N_WT <- readRDS('data/MCCs/Bl6N_WT.rds')
+CcnoKO <- readRDS('data/MCCs/CcnoKO.rds')
+
 # Merge all datasets together 
 Bl6J_WT$sample <- 'WT'
 Bl6N_WT$sample <- 'WT'
 CcnoKO$sample <- 'KO'
-rowData(Bl6J_WT) <- rowData(Bl6N_WT) <- rowData(CcnoKO) <- rowData(CcnoKO)[, c(1:7)]
+rowData(CcnoKO) <- rowData(CcnoKO)[, c(1:7)]
+rowData(Bl6J_WT) <- rowData(CcnoKO)  
+rowData(Bl6N_WT) <- rowData(CcnoKO)  
 mergedSCEs <- cbind(Bl6J_WT, Bl6N_WT, CcnoKO)
 mergedSCEs <- scuttle::logNormCounts(mergedSCEs)
 reducedDim(mergedSCEs, 'PCA') <- scater::calculatePCA(mergedSCEs)
@@ -175,6 +187,7 @@ p <- scater::plotReducedDim(mergedSCEs, "UMAP_corrected", colour_by = 'slingshot
         mapping = aes(x = X, y = Y), 
         inherit.aes = FALSE, size = 2
     )
+ggsave('data/MCCs/joint-WT-CcnoKO-trajectory.pdf')
 ```
 
 ## 3. Perform DE expression analysis on a portion of the trajectory

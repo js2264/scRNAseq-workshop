@@ -17,9 +17,11 @@ output:
 
 ## 1. Dimensionality reduction 
 
-I am currently working on multiciliated differentiation process. 
+I am currently working on the differentiation of neural progenitor cells into multiciliated cells:
 
 ![](.img/2021-09-24-10-16-22.png)
+
+Let's load the data I have provided and inspect it: 
 
 ```{r eval = FALSE}
 library(SingleCellExperiment)
@@ -60,10 +62,11 @@ p <- ggplot(df, aes(x = mean, y = variance)) +
     ) +
     labs(x = 'Gene expression mean', y = 'Gene expression variance') +
     theme_bw() 
+ggsave('data/MCCs/variance~mean.pdf')
 ```
 
 The gene expression variance is more or less equals to the gene average expression, as it should be 
-assuming counts follow a Poisson distribution. The data is probably already normalized!
+assuming counts follow a Poisson distribution. This suggests that the data is probably already normalized!
 
 We can now flag HVGs and use them for dimensionality reduction. 
 
@@ -90,7 +93,8 @@ p <- ggplot(df) +
     geom_point(aes(x = mean, y = var, col = HVG), alpha = 0.4) + 
     geom_line(aes(x = mean, y = trend), col = 'darkred') +
     theme_minimal() + 
-    labs(x = 'Gene mean exp. (norm.)', y = 'Gene exp. variance')
+    labs(x = 'Gene mean exp. (log1p)', y = 'Gene exp. variance')
+ggsave('data/MCCs/variance~mean_HVGs.pdf')
 ```
 
 Is the default gene variance fitting approach good? Can we try out another approach? 
@@ -118,10 +122,11 @@ p <- ggplot(df) +
     geom_line(aes(x = mean, y = trend), col = 'darkred') +
     scale_x_log10() + scale_y_log10() + 
     theme_minimal() + 
-    labs(x = 'Gene mean exp. (norm.)', y = 'Gene exp. CV2')
+    labs(x = 'Gene mean exp.', y = 'Gene exp. CV2')
+ggsave('data/MCCs/cv2~mean_HVGs.pdf')
 ```
 
-Fitting gene expression CV2 ~ mean seems to be more robust than gene expression variance ~ mean, here. 
+Fitting gene expression CV2 ~ mean seems to be slightly more robust than gene expression variance ~ mean, here. 
 We will use these HVGs for dimensionality reduction.
 
 Now we can embed in PCA: 
@@ -140,6 +145,7 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(MCCs, 'PCA', colour_by = 'detected'),
     scater::plotReducedDim(MCCs, 'PCA', colour_by = 'sum')
 )
+ggsave('data/MCCs/pca.pdf')
 ```
 
 ## 2. Cell clustering 
@@ -176,6 +182,7 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(MCCs, 'PCA', colour_by = 'cluster_kmeans', text_by = 'cluster_kmeans') + ggtitle('PCA, k-means clusters'),
     scater::plotReducedDim(MCCs, 'PCA', colour_by = 'cluster_SNN', text_by = 'cluster_SNN') + ggtitle('PCA, SNN-graph clusters')
 )
+ggsave('data/MCCs/clusters_PCA.pdf')
 ```
 
 We can embed MCCs in UMAP space to better visualize the clusters
@@ -188,6 +195,7 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(MCCs, 'UMAP', colour_by = 'cluster_kmeans', text_by = 'cluster_kmeans') + ggtitle('UMAP, k-means clusters'),
     scater::plotReducedDim(MCCs, 'UMAP', colour_by = 'cluster_SNN', text_by = 'cluster_SNN') + ggtitle('UMAP, SNN-graph clusters')
 )
+ggsave('data/MCCs/clusters_UMAP.pdf')
 ```
 
 A new approach to check cell clustering is to leverage `bluster` package: 
@@ -253,6 +261,7 @@ p <- cowplot::plot_grid(
         theme_bw(), 
     nrow = 1, align = 'vh', axis = 'trbl'
 )
+ggsave('data/MCCs/Mki67_UMAP.pdf', width = 10, height = 3)
 
 # Multiple genes in a `lapply` function
 p <- lapply(genes, function(gene) {
@@ -278,5 +287,6 @@ p <- lapply(genes, function(gene) {
         nrow = 1, align = 'vh', axis = 'trbl'
     )
 }) %>% cowplot::plot_grid(plotlist = ., ncol = 1)
+ggsave('data/MCCs/gene-expr_UMAP.pdf', w = 15, h = 15)
 ```
 
