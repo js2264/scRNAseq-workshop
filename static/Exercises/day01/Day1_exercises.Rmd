@@ -118,12 +118,12 @@ Be sure you have enough storage space in the filesystem you are using, as you wi
 
 ```{sh eval = FALSE}
 cd ${HOME}/scRNAseq_Jan22/
-git clone https://github.com/js2264/scRNAseq_Physalia_2021.git
+git clone https://github.com/js2264/scRNAseq-workshop.git
 ```
 
 This downloads the repository for this course to your home folder on the AWS machine.  
 To get it on your local computer (to save the lectures and exercises), you can also go to 
-[the GitHub repo page](https://github.com/js2264/scRNAseq_Physalia_2021), click on the 
+[the GitHub repo page](https://github.com/js2264/scRNAseq-workshop), click on the 
 green `Code` button, then `Download ZIP`. Beware, the download may take a significant 
 time based on your internet connection (several hundreds MB). 
 
