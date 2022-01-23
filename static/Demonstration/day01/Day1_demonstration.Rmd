@@ -29,7 +29,7 @@ tar -xvf data/E18_Heart/fastq/heart_1k_v3_fastqs.tar
 mv heart_1k_v3_fastqs/ data/E18_Heart/fastq/
 ls --color -ltFh data/E18_Heart/fastq/heart_1k_v3_fastqs
 gunzip -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R1_001.fastq.gz | head
-gunzip -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R2_001.fastq.gz | head
+zcat data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R2_001.fastq.gz | head
 gunzip -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_I1_001.fastq.gz | head
 ```
 
@@ -127,7 +127,7 @@ samtools flagstat data/E18_Heart/cellranger/E18_Heart/outs/possorted_genome_bam.
 The `analysis` folder contains relevant(ish) information obtained from after a rough post-alignment processing of the dataset by `cellranger`.
 
 ```{sh eval = FALSE}
-tree -L 2 data/E18_Heart/cellranger/E18_Heart/analysis/
-head data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv
-cut -f 2 -d, data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv | sort | uniq -c
+tree -L 2 data/E18_Heart/cellranger/E18_Heart/outs/analysis/
+head data/E18_Heart/cellranger/E18_Heart/outs/analysis/clustering/graphclust/clusters.csv
+cut -f 2 -d, data/E18_Heart/cellranger/E18_Heart/outs/analysis/clustering/graphclust/clusters.csv | sort | uniq -c
 ```

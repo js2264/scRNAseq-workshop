@@ -1705,7 +1705,7 @@ font-weight: bold
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="fu">mv</span> heart_1k_v3_fastqs/ data/E18_Heart/fastq/</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="fu">ls</span> --color -ltFh data/E18_Heart/fastq/heart_1k_v3_fastqs</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="fu">gunzip</span> -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R1_001.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="fu">gunzip</span> -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R2_001.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="fu">zcat</span> data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R2_001.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="fu">gunzip</span> -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_I1_001.fastq.gz <span class="kw">|</span> <span class="fu">head</span></span></code></pre></div>
 </div>
 <div id="prepare-genome-for-alignment" class="section level2">
@@ -1772,9 +1772,9 @@ font-weight: bold
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="ex">samtools</span> view data/E18_Heart/cellranger/E18_Heart/outs/possorted_genome_bam.bam <span class="kw">|</span> <span class="fu">head</span> -n 10</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="ex">samtools</span> flagstat data/E18_Heart/cellranger/E18_Heart/outs/possorted_genome_bam.bam</span></code></pre></div>
 <p>The <code>analysis</code> folder contains relevant(ish) information obtained from after a rough post-alignment processing of the dataset by <code>cellranger</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="ex">tree</span> -L 2 data/E18_Heart/cellranger/E18_Heart/analysis/</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="fu">head</span> data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="fu">cut</span> -f 2 -d, data/E18_Heart/cellranger/E18_Heart/analysis/clustering/graphclust/clusters.csv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> -c</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="ex">tree</span> -L 2 data/E18_Heart/cellranger/E18_Heart/outs/analysis/</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="fu">head</span> data/E18_Heart/cellranger/E18_Heart/outs/analysis/clustering/graphclust/clusters.csv</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="fu">cut</span> -f 2 -d, data/E18_Heart/cellranger/E18_Heart/outs/analysis/clustering/graphclust/clusters.csv <span class="kw">|</span> <span class="fu">sort</span> <span class="kw">|</span> <span class="fu">uniq</span> -c</span></code></pre></div>
 </div>
 </div>
 

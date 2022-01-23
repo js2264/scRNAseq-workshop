@@ -98,7 +98,8 @@ conda install -c conda-forge numpy \
     scipy \
     pandas \
     matplotlib \
-    setuptools
+    setuptools \
+    STAR
 
 ## --- Install other softwares (fastQC, samtools, cellranger and cellranger indexes)
 conda install -c bioconda fastqc samtools

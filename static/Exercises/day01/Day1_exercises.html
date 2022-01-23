@@ -1690,6 +1690,7 @@ font-weight: bold
       <li><a href="#running-cellranger-count">Running <code>cellranger count</code></a></li>
       <li><a href="#checking-count-output-files">Checking <code>count</code> output files</a></li>
       </ul></li>
+      <li><a href="#alternative.-generating-gene-count-matrices-with-starsolo">3 [alternative]. Generating gene count matrices with STARsolo</a></li>
       <li><a href="#obtaining-single-cell-rna-seq-datasets">4. Obtaining single-cell RNA-seq datasets</a>
       <ul>
       <li><a href="#raw-fastq-reads-from-geo">Raw fastq reads from GEO</a></li>
@@ -1768,8 +1769,8 @@ font-weight: bold
 <ul>
 <li>List all files in a folder</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="fu">ls</span> -l ~/Share/</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a><span class="fu">ls</span> --color -Flh ~/Share/</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="fu">ls</span> -l ~/</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a><span class="fu">ls</span> --color -Flh ~/</span></code></pre></div>
 </div>
 <div id="prepare-a-place-in-your-computer-where-you-will-follow-the-workshop" class="section level2">
 <h2>1. Prepare a place in your computer where you will follow the workshop</h2>
@@ -1780,8 +1781,8 @@ font-weight: bold
 </blockquote>
 <div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co"># Create a directory for the workshop </span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="fu">mkdir</span> scRNAseq_Sept21</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Sept21/</span></code></pre></div>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="fu">mkdir</span> scRNAseq_Jan22</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan22/</span></code></pre></div>
 <p>From now on, everything you do should take place in this folder! Be sure you have enough storage space in the filesystem you are using, as you will need lots of it!</p>
 </div>
 <div id="clone-github-directory-in-the-workshop-directory" class="section level3">
@@ -1789,7 +1790,7 @@ font-weight: bold
 <blockquote>
 <p>Download the <code>git</code> repository for this course from <code>GitHub</code>:</p>
 </blockquote>
-<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Sept21/</span>
+<div class="sourceCode" id="cb13"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan22/</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="fu">git</span> clone https://github.com/js2264/scRNAseq_Physalia_2021.git</span></code></pre></div>
 <p>This downloads the repository for this course to your home folder on the AWS machine.<br />
 To get it on your local computer (to save the lectures and exercises), you can also go to <a href="https://github.com/js2264/scRNAseq_Physalia_2021">the GitHub repo page</a>, click on the green <code>Code</code> button, then <code>Download ZIP</code>. Beware, the download may take a significant time based on your internet connection (several hundreds MB).</p>
@@ -1797,6 +1798,7 @@ To get it on your local computer (to save the lectures and exercises), you can a
 </div>
 <div id="processing-raw-files-into-fastq-files" class="section level2">
 <h2>2. Processing raw files into fastq files</h2>
+<p><strong>NOTE:</strong> This is a step typically performed internally by sequencing platform, which delivers <code>.fastq</code> files rather than <code>.bcl</code> files.</p>
 <p>First, familiarize yourself with <code>cellranger mkfastq</code> documentation: go to <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq">cellranger mkfastq webpage</a> and read the <strong>Overview</strong>.</p>
 <blockquote>
 <p>What is the command you are going to use? What are the required and optional arguments for this command?</p>
@@ -1809,7 +1811,7 @@ To get it on your local computer (to save the lectures and exercises), you can a
 <blockquote>
 <p>Download the indicated <code>bcl</code> files and unzip it in a subdirectory called <code>data/bcl2fastq/</code>.</p>
 </blockquote>
-<div class="sourceCode" id="cb15"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Sept21/</span>
+<div class="sourceCode" id="cb15"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan22/</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="fu">mkdir</span> -p data/bcl2fastq/</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a><span class="ex">curl</span> https://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-1.2.0.tar.gz -o data/bcl2fastq/cellranger-tiny-bcl-1.2.0.tar.gz</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a><span class="fu">tar</span> -xzvf data/bcl2fastq/cellranger-tiny-bcl-1.2.0.tar.gz <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> cellranger-tiny-bcl-1.2.0/ data/bcl2fastq/</span></code></pre></div>
@@ -1840,12 +1842,12 @@ To get it on your local computer (to save the lectures and exercises), you can a
 <blockquote>
 <p>Now that we have a samplesheet ready, let’s launch the <code>cellranger mkfastq</code> workflow.</p>
 </blockquote>
-<div class="sourceCode" id="cb19"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Sept21/data/bcl2fastq/</span>
+<div class="sourceCode" id="cb19"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan22/data/bcl2fastq/</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a><span class="ex">cellranger</span> mkfastq <span class="kw">\</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a>    <span class="ex">--id</span>=tiny-bcl <span class="kw">\</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a>    <span class="ex">--run</span>=cellranger-tiny-bcl-1.2.0/ <span class="kw">\</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a>    <span class="ex">--csv</span>=cellranger-tiny-bcl-samplesheet.csv</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Sept21/</span></code></pre></div>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan22/</span></code></pre></div>
 <p>Watch out the memory usage! For <code>mkfastq</code> command with human genome, at least 32 Gb of RAM are required!</p>
 <blockquote>
 <p>What are the different files generated by this workflow?</p>
@@ -1857,7 +1859,7 @@ To get it on your local computer (to save the lectures and exercises), you can a
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a><span class="ex">tree</span> -L 3 data/bcl2fastq/tiny-bcl/</span></code></pre></div>
 <blockquote>
 <p>How many fastq files have been generated? What does each one correspond to?<br />
-Look at the index read (I1), read 1 (R1), and read (R2) files using the command <code>gunzip -c &lt;FASTQ_FILE_NAME&gt;.gz | head</code>. What does each file contain?<br />
+Look at the index read (I1), read 1 (R1), and read (R2) files using the command <code>zcat &lt;FASTQ_FILE_NAME&gt;.gz | head</code>. What does each file contain?<br />
 Open the html file <code>tiny-bcl/outs/fastq_path/Reports/html/index.html</code>. Take some time to explore the demultiplexed outputs.</p>
 </blockquote>
 </div>
@@ -1872,7 +1874,7 @@ Open the html file <code>tiny-bcl/outs/fastq_path/Reports/html/index.html</code>
 <h3>Download genome index for the toy dataset</h3>
 <p><code>mm10</code> pre-processed cellranger-formatted genome reference index is available <a href="https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz">here</a>.</p>
 <blockquote>
-<p>Download it in a subdirectory named <code>${HOME}/scRNAseq_Sept21/</code></p>
+<p>Download it in a subdirectory named <code>${HOME}/scRNAseq_Jan22/</code></p>
 </blockquote>
 <div class="sourceCode" id="cb21"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="ex">curl</span> https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz -o refdata-gex-mm10-2020-A.tar.gz</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="fu">tar</span> -xzvf refdata-gex-mm10-2020-A.tar.gz <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> refdata-gex-mm10-2020-A/ data/bcl2fastq/</span></code></pre></div>
@@ -1883,7 +1885,7 @@ Open the html file <code>tiny-bcl/outs/fastq_path/Reports/html/index.html</code>
 <blockquote>
 <p>In the terminal, run the <code>count</code> command.</p>
 </blockquote>
-<div class="sourceCode" id="cb23"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Sept21/data/bcl2fastq/</span>
+<div class="sourceCode" id="cb23"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan22/data/bcl2fastq/</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a><span class="ex">cellranger</span> count <span class="kw">\</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a>    <span class="ex">--id</span>=counts <span class="kw">\</span></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a>    <span class="ex">--transcriptome</span>=refdata-gex-mm10-2020-A <span class="kw">\</span></span>
@@ -1909,6 +1911,25 @@ Do the different metrics suggest that this sample contains good-quality data?</p
 </blockquote>
 </div>
 </div>
+<div id="alternative.-generating-gene-count-matrices-with-starsolo" class="section level2">
+<h2>3 [alternative]. Generating gene count matrices with STARsolo</h2>
+<div class="sourceCode" id="cb25"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="co"># Install STAR</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="ex">conda</span> install -c bioconda star </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a><span class="co"># Build STAR index</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a><span class="ex">curl</span> https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz -o refdata-gex-mm10-2020-A.tar.gz</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a><span class="fu">tar</span> -xzvf refdata-gex-mm10-2020-A.tar.gz <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> refdata-gex-mm10-2020-A/ data/bcl2fastq/</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a><span class="ex">STAR</span> --runMode genomeGenerate --runThreadN 16 --genomeDir data/bcl2fastq/ --genomeFastaFiles data/bcl2fastq/refdata-gex-mm10-2020-A/fasta/genome.fa  --sjdbGTFfile data/bcl2fastq/refdata-gex-mm10-2020-A/genes/genes.gtf</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true"></a><span class="va">STAR_GENOME_DIR=</span>data/bcl2fastq/refdata-gex-mm10-2020-A/star/</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true"></a><span class="co"># Get barcode whitelist</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true"></a><span class="ex">curl</span> https://raw.githubusercontent.com/10XGenomics/cellranger/master/lib/python/cellranger/barcodes/737K-august-2016.txt -o data/bcl2fastq/737K-august-2016.txt</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true"></a><span class="va">BC_WHITELIST_FILE=</span>data/bcl2fastq/737K-august-2016.txt</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true"></a><span class="co"># Run STAR</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true"></a><span class="ex">STAR</span> <span class="kw">\</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true"></a>    <span class="ex">--genomeDir</span> <span class="st">&quot;</span><span class="va">${STAR_GENOME_DIR}</span><span class="st">&quot;</span> <span class="kw">\</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true"></a>    <span class="ex">--soloType</span> CB_UMI_Simple <span class="kw">\</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true"></a>    <span class="ex">--soloCBwhitelist</span> <span class="st">&quot;</span><span class="va">${BC_WHITELIST_FILE}</span><span class="st">&quot;</span> <span class="kw">\</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true"></a>    <span class="ex">--readFilesIn</span> data/bcl2fastq/tiny-bcl/outs/fastq_path/Undetermined_S0_L001_R2_001.fastq.gz data/bcl2fastq/tiny-bcl/outs/fastq_path/Undetermined_S0_L001_R1_001.fastq.gz</span></code></pre></div>
+</div>
 <div id="obtaining-single-cell-rna-seq-datasets" class="section level2">
 <h2>4. Obtaining single-cell RNA-seq datasets</h2>
 <p>“This is a course about single-cell RNA-seq analysis, right, so where is my data?”</p>
@@ -1929,17 +1950,17 @@ Do the different metrics suggest that this sample contains good-quality data?</p
 <blockquote>
 <p>Try to install and use the <a href="https://github.com/pachterlab/ffq">brand new <code>ffq</code> tool</a> from the Patcher lab.</p>
 </blockquote>
-<div class="sourceCode" id="cb25"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="ex">conda</span> install -c bioconda ffq</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="ex">ffq</span> --help</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a><span class="ex">ffq</span> -t GSE GSE148963</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="ex">conda</span> install -c bioconda ffq</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a><span class="ex">ffq</span> --help</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a><span class="ex">ffq</span> -t GSE GSE148963</span></code></pre></div>
 <blockquote>
 <p>Can you find the links to raw data associated with the <code>GSE148963</code> GEO ID?</p>
 </blockquote>
 <p>You should use a <code>grep</code> command: <code>grep</code> returns the lines which match a given pattern (e.g. a link…)!</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="ex">ffq</span> -t GSE GSE148963 <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&#39;ftp://&#39;</span> </span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="ex">ffq</span> -t GSE GSE148963 <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&#39;ftp://&#39;</span> </span></code></pre></div>
 <p>And with a bit of <code>sed</code> magick…</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="ex">ffq</span> -t GSE GSE148963 <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&#39;ftp://&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s,.*ftp:,ftp:,&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s,&quot;.*,,&#39;</span> <span class="op">&gt;</span> GSE148963_fastqlist.txt</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a><span class="co"># wget -i GSE148963_fastqlist.txt ## Do not run, it would take too long...</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="ex">ffq</span> -t GSE GSE148963 <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&#39;ftp://&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s,.*ftp:,ftp:,&#39;</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s,&quot;.*,,&#39;</span> <span class="op">&gt;</span> GSE148963_fastqlist.txt</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a><span class="co"># wget -i GSE148963_fastqlist.txt ## Do not run, it would take too long...</span></span></code></pre></div>
 </div>
 <div id="bonus-pre-processed-count-matrices" class="section level3">
 <h3>[BONUS] Pre-processed count matrices</h3>
