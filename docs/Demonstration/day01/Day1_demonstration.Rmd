@@ -24,13 +24,13 @@ This is a single-cell RNA-seq sample from mouse embryonic (E18) heart cells. Let
 
 ```{sh eval = FALSE}
 mkdir -p data/E18_Heart/fastq
-curl https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_fastqs.tar data/E18_Heart/fastq/heart_1k_v3_fastqs.tar
+curl https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_fastqs.tar -O data/E18_Heart/fastq/heart_1k_v3_fastqs.tar
 tar -xvf data/E18_Heart/fastq/heart_1k_v3_fastqs.tar
 mv heart_1k_v3_fastqs/ data/E18_Heart/fastq/
 ls --color -ltFh data/E18_Heart/fastq/heart_1k_v3_fastqs
-gunzip -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R1_001.fastq.gz | head
+zcat data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R1_001.fastq.gz | head
 zcat data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R2_001.fastq.gz | head
-gunzip -c data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_I1_001.fastq.gz | head
+zcat data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_I1_001.fastq.gz | head
 ```
 
 ## 2. Prepare genome for alignment
