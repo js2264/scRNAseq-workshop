@@ -1,0 +1,224 @@
+```{r "intro"}
+#| echo: false
+intro <- tryCatch(
+    {
+        description <- packageDescription("scRNAseqWorkshop")
+        pkg <- description$Package
+        version <- description$Version
+        authors <- eval(parse(text = description$Authors))
+        license <- description$License
+        glue::glue(
+            "**Package:** {pkg}<br/>\n", 
+            "**Authors:** {paste(format(authors, include = c('given', 'family', 'role')), collapse = ', ')}<br/>\n", 
+            "**Compiled:** {as.character(Sys.Date())}<br/>\n", 
+            "**Package version:** {version}<br/>\n", 
+            "**R version:** <b style='color:red;'>{R.version.string}</b><br/>\n", 
+            "**BioC version:** <b style='color:red;'>{BiocManager::version()}</b><br/>\n", 
+            "**License:** {license}<br/>"
+        )
+    }, 
+    error = function(e) {"Local preview"}
+)
+```
+
+`r intro`
+
+# Welcome {-}
+
+This is the landing page of the workshop entitled *Single-cell RNA-seq analysis with R/Bioconductor*. 
+
+## Overview
+
+This course will introduce biologists and bioinformaticians to the 
+field of single-cell RNA sequencing. 
+We will cover a range of software and analysis workflows that extend 
+over the spectrum from the best practices in the filtering scRNA-seq data  
+to the downstream analysis of cell clusters and temporal ordering. 
+This course will help the attendees gain accurate insights in pre-processing, 
+analysis and interpretation of scRNA-seq data.
+
+We will start by introducing general concepts about single-cell RNA-sequencing. 
+From there, we will then continue to describe the main analysis steps to go from 
+raw sequencing data to processed and usable data. We will present classical 
+analysis workflows, their output and the possible paths to investigate for 
+downstream analysis.  
+
+Throughout this workshop, we will put an emphasis on `R/Bioconductor` ecosystem 
+and the different packages which will be used to analyse datasets and learn new approaches. 
+
+## Format
+
+The course is structured in modules over five days.  
+
+During the first 1/3 of the day, formal lectures will cover the key 
+concepts required to understand the principles of scRNA-seq analysis (~2h).
+
+Following these lectures, practical examples will be shown to illustrate how 
+to translate the acquired knowledge into functional `R` code (~1h). At this stage, 
+trainees will get acquainted with state-of-the-art packages for scRNAseq analysis 
+as well as the best practices in bioinformatics. 
+
+During the second half of the day (3h), trainees will work by themselves, following 
+guided exercises to improve their understanding of scRNAseq analysis workflow.
+Hints and solution are provided for each exercise. The exercises will mainly focus 
+on specific concepts introducted earlier that day.
+However, analytical steps studied throughout the previous days will also 
+be integrated so that towards the end of the week, trainees are fully able 
+to perform fundamental scRNAseq analyses from beginning to end. 
+
+Office hours will take place during the last hour of the exercises. An 
+instructor will be available to answer individual questions related to daily exercises. 
+A Slack channel will also be available so that Q&A are available for everybody.
+
+## Learning outcomes
+
+At the end of this course, you should be able to:
+
+- Understand the pros/cons of different single-cell RNA-seq methods
+- Process and QC of scRNA-seq data
+- Normalize scRNA-seq data
+- Correct for batch effects
+- Visualise the data and applying dimensionality reduction
+- Perform cell clustering and annotation 
+- Perform differential gene expression analysis
+- Infer cell trajectory and pseudotime, and perform temporal differential expression 
+
+## Instructor
+
+[Dr. Jacques Serizay](mailto:jacques.serizay@pasteur.fr)
+
+# Program {-}
+
+## Day 1 {-}
+
+- **\[1h\]** Lecture 1 - General introduction to single-cell RNA-seq experimental design
+    [[Pptx]](Presentations/Lecture1_experimental-design.pptx)
+
+- **\[1h\]** Lecture 2 - scRNAseq: from raw sequencing files to count matrix
+    [[Pptx]](Presentations/Lecture2_bcl-to-matrix.pptx)
+
+- **\[1h\]** Demonstration 1 - From fastq to count matrix
+    [[HTML](Demonstration/Day1_demonstration.qmd) | [qmd (save to open in RStudio)](Demonstration/Day1_demonstration.qmd)]
+
+-  **\[3h\]** Homework - From bcl to count matrix
+    [[HTML](Exercises/Day1_exercises.qmd) | [qmd (save to open in RStudio)](Exercises/Day1_exercises.qmd)]
+
+## Day 2 {-}
+
+- **\[1h\]** Lecture 3 - Filtering cells in droplet-based scRNAseq data
+    [[Pptx]](Presentations/Lecture3_doublet-cells.pptx)
+
+- **\[1h\]** Lecture 4 - Normalizing scRNAseq data
+    [[Pptx]](Presentations/Lecture4_normalization.pptx)
+
+- **\[BONUS\]** R/Bioconductor essentials: `GRanges` and `*Experiment` classes [[Pptx]](docs/R-essentials.pptx)
+
+- **\[1h\]** Demonstration 2 - Leveraging R/Bioconductor for single-cell analyses
+    [[HTML](Demonstration/Day2_demonstration.qmd) | [qmd (save to open in RStudio)](Demonstration/Day2_demonstration.qmd)]
+
+-  **\[3h\]** Homework - scRNAseq analysis with R/Bioconductor (1/3)
+    [[HTML](Exercises/Day2_exercises.qmd) | [qmd (save to open in RStudio)](Exercises/Day2_exercises.qmd)]
+
+## Day 3 {-}
+
+- **\[2h\]** Lecture 5 - Clustering cells in scRNAseq 
+    [[Pptx]](Presentations/Lecture5_clustering.pptx)
+
+- **\[1h\]** Demonstration 3 - Dimensional reduction visualization and clustering
+    [[HTML](Demonstration/Day3_demonstration.qmd) | [qmd (save to open in RStudio)](Demonstration/Day3_demonstration.qmd)]
+
+-  **\[3h\]** Homework - scRNAseq analysis with R/Bioconductor (2/3)
+    [[HTML](Exercises/Day3_exercises.qmd) | [qmd (save to open in RStudio)](Exercises/Day3_exercises.qmd)]
+
+## Day 4 {-}
+
+- **\[1h\]** Lecture 6 - Cell type annotations 
+    [[Pptx]](Presentations/Lecture6_annotations.pptx)
+
+- **\[1h\]** Lecture 7 - Batch correction 
+    [[PDF]](Presentations/Lecture7_batchcorrection.pdf)
+
+- **\[1h\]** Demonstration 4 - Annotation transfer with `scmap`
+    [[HTML](Demonstration/Day4_demonstration.qmd) | [qmd (save to open in RStudio)](Demonstration/Day4_demonstration.qmd)]
+
+-  **\[3h\]** Homework - scRNAseq analysis with R/Bioconductor (3/3)
+    [[HTML](Exercises/Day4_exercises.qmd) | [qmd (save to open in RStudio)](Exercises/Day4_exercises.qmd)]
+
+## Day 5 {-}
+
+- **\[2h\]** Lecture 8 - Trajectory inference and RNA velocity
+    [[Pptx]](Presentations/Lecture8_pseudotime.pptx)
+
+- **\[1h\]** Demonstration 5 - Trajectory inference in multiciliated cells 
+    [[HTML](Demonstration/Day5_demonstration.qmd) | [qmd (save to open in RStudio)](Demonstration/Day5_demonstration.qmd)]
+
+-  **\[3h\]** Homework - Advanced scRNAseq topics: trajectory inference and RNA velocity
+    [[HTML](Exercises/Day5_exercises.qmd) | [qmd (save to open in RStudio)](Exercises/Day5_exercises.qmd)]
+
+
+# Docker image {-}
+
+A `Docker` image built from this repository is available here: 
+
+👉 [ghcr.io/js2264/scrnaseqworkshop](https://ghcr.io/js2264/scrnaseqworkshop) 🐳
+
+::: {.callout-tip icon='true'}
+## Get started now 🎉
+
+You can get access to all the packages used in this book in < 1 minute, 
+using this command in a terminal: 
+
+```{sh "docker", filename="bash"}
+#| eval: false
+docker run -it ghcr.io/js2264/scrnaseqworkshop:devel R
+```
+
+:::
+
+# RStudio Server {-}
+
+An RStudio Server instance can be initiated from the `Docker` image as follows: 
+
+```{sh "rstudio", filename="bash"}
+#| eval: false
+docker run \
+    --volume <local_folder>:<destination_folder> \
+    -e PASSWORD=OHCA \
+    -p 8787:8787 \
+    ghcr.io/js2264/scrnaseqworkshop:devel
+```
+
+The initiated RStudio Server instance will be available at 
+[https://localhost:8787](https://localhost:8787).
+
+# Course material {-} 
+
+The workshop content is available [at this adress: https://github.com/js2264/scRNAseq-workshop](https://github.com/js2264/scRNAseq-workshop). 
+
+You can clone it locally with `git`: 
+
+```sh
+git clone https://github.com/js2264/scRNAseq-workshop.git
+```
+
+To download it without the command-line tool `git`, go to 
+[the GitHub repo page](https://github.com/js2264/scRNAseq-workshop), click on the 
+green `Code` button, then `Download ZIP`. Beware, the download may take a significant 
+time based on your internet connection (several hundreds MB). 
+
+
+# Session info {-}
+
+::: {.callout-note collapse="true"}
+
+## Click to expand 👇
+
+```{r "session info"}
+#| cache: false
+sessioninfo::session_info(
+    installed.packages()[,"Package"], 
+    include_base = TRUE
+)
+```
+
+:::

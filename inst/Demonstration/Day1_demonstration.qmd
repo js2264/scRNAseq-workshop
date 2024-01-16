@@ -1,0 +1,134 @@
+---
+title: "Demonstration: From fastq to count matrix"
+engine: knitr
+output:
+  rmdformats::readthedown:
+    highlight: tango
+    css: ../../../custom.css
+    toc_depth: 3
+---
+
+**Goals:**
+
+- Introduce the `cellranger` toolkit
+
+---
+
+## 1. Download sequencing reads in fastq format
+
+Here we will process a single-cell RNA-seq dataset provided by 10X Genomics, as an example.
+
+Here is the link to the dataset: 
+[link](https://www.10xgenomics.com/resources/datasets/1-k-heart-cells-from-an-e-18-mouse-v-3-chemistry-3-standard-3-0-0)
+
+This is a single-cell RNA-seq sample from mouse embryonic (E18) heart cells. Let's first download the raw fastqs. 
+
+```{sh eval = FALSE}
+mkdir -p data/E18_Heart/fastq
+curl https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_fastqs.tar -O data/E18_Heart/fastq/heart_1k_v3_fastqs.tar
+tar -xvf data/E18_Heart/fastq/heart_1k_v3_fastqs.tar
+mv heart_1k_v3_fastqs/ data/E18_Heart/fastq/
+ls --color -ltFh data/E18_Heart/fastq/heart_1k_v3_fastqs
+zcat data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R1_001.fastq.gz | head
+zcat data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_R2_001.fastq.gz | head
+zcat data/E18_Heart/fastq/heart_1k_v3_fastqs/heart_1k_v3_S1_L001_I1_001.fastq.gz | head
+```
+
+## 2. Prepare genome for alignment
+
+Download GRCm38 genome reference and gene annotations from iGenomes to ensure that genome reference and gene annotations 
+are uniformly processed. 
+
+```{sh eval = FALSE}
+# Download files
+mkdir data/E18_Heart/GRCm38/ && cd data/E18_Heart/GRCm38
+curl http://igenomes.illumina.com.s3-website-us-east-1.amazonaws.com/Mus_musculus/Ensembl/GRCm38/Mus_musculus_Ensembl_GRCm38.tar.gz
+tar -xzvf Mus_musculus_Ensembl_GRCm38.tar.gz
+# Clean up gtf file to remove unscaffolded contigs
+grep -vP "^CHR|^GL|^JH" Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes.gtf > Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes_filtered.gtf
+cut -f1 Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes_filtered.gtf | uniq -c
+# Build cellranger index
+cellranger mkref \
+    --genome=GRCm38 \
+    --fasta=Mus_musculus/Ensembl/GRCm38/Sequence/WholeGenomeFasta/genome.fa \
+    --genes=Mus_musculus/Ensembl/GRCm38/Annotation/Genes/genes_filtered.gtf \
+    --nthreads=18 \
+    --memgb=40
+cd ../../../
+ls --color -lthF data/E18_Heart/GRCm38/GRCm38
+```
+
+If you fail to download/build Cellranger index, you can always get another version from here: 
+
+```{sh eval = FALSE}
+wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz
+#md5sum: 886eeddde8731ffb58552d0bb81f533d
+tar -xzvf refdata-gex-mm10-2020-A.tar.gz
+ls --color -lthF data/E18_Heart/GRCm38/GRCm38
+```
+
+## 3. Map reads onto 10X-formatted genome with cellranger
+
+```{sh eval = FALSE}
+mkdir -p data/E18_Heart/cellranger && cd data/E18_Heart/cellranger
+cellranger count \
+    --id=E18_Heart \
+    --transcriptome=../../../data/E18_Heart/GRCm38/GRCm38 \
+    --fastqs=../../../data/E18_Heart/fastq/heart_1k_v3_fastqs \
+    --expect-cells=1000 \
+    --localcores=18 \
+    --localmem=40
+cd ../../
+```
+
+Mapping takes a significant amount of time. On my machine, it takes nearly ~ 1h to finish.  
+ 
+This should appear at the end of the mapping/counting process: 
+
+```{sh eval = FALSE}
+## Outputs:
+## - Run summary HTML:                         E18_Heart/web_summary.html
+## - Run summary CSV:                          E18_Heart/metrics_summary.csv
+## - BAM:                                      E18_Heart/possorted_genome_bam.bam
+## - BAM index:                                E18_Heart/possorted_genome_bam.bam.bai
+## - Filtered feature-barcode matrices MEX:    E18_Heart/filtered_feature_bc_matrix
+## - Filtered feature-barcode matrices HDF5:   E18_Heart/filtered_feature_bc_matrix.h5
+## - Unfiltered feature-barcode matrices MEX:  E18_Heart/raw_feature_bc_matrix
+## - Unfiltered feature-barcode matrices HDF5: E18_Heart/raw_feature_bc_matrix.h5
+## - Secondary analysis output CSV:            E18_Heart/analysis
+## - Per-molecule read information:            E18_Heart/molecule_info.h5
+## - Loupe Browser file:                       E18_Heart/cloupe.cloupe
+## Waiting 6 seconds for UI to do final refresh.
+## Pipestance completed successfully!
+```
+
+
+## 4. Check output files
+
+A description of the different output files is available [here](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count).
+
+```{sh eval = FALSE}
+ls --color -lthF data/E18_Heart/cellranger/E18_Heart/
+ls --color -lthF data/E18_Heart/cellranger/E18_Heart/outs
+```
+
+We can check the `html` summary report in a web browser to get more insights about the results of the scRNAseq experiment. 
+
+```{sh eval = FALSE}
+data/E18_Heart/cellranger/E18_Heart/outs/web_summary.html
+```
+
+If samtools is installed, one can also check the bam file obtained using `cellranger count` workflow. 
+
+```{sh eval = FALSE}
+samtools view data/E18_Heart/cellranger/E18_Heart/outs/possorted_genome_bam.bam | head -n 10
+samtools flagstat data/E18_Heart/cellranger/E18_Heart/outs/possorted_genome_bam.bam
+```
+
+The `analysis` folder contains relevant(ish) information obtained from after a rough post-alignment processing of the dataset by `cellranger`.
+
+```{sh eval = FALSE}
+tree -L 2 data/E18_Heart/cellranger/E18_Heart/outs/analysis/
+head data/E18_Heart/cellranger/E18_Heart/outs/analysis/clustering/graphclust/clusters.csv
+cut -f 2 -d, data/E18_Heart/cellranger/E18_Heart/outs/analysis/clustering/graphclust/clusters.csv | sort | uniq -c
+```

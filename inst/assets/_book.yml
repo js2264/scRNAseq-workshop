@@ -1,0 +1,49 @@
+book:
+  title: "Single-cell RNA-seq workshop ed. 2024"
+  chapters:
+    - text: "Program"
+      file: index.qmd
+    - part: "Day 1"
+      chapters:
+        - text: "Lecture 1"
+          file: Presentations/Lecture1_experimental-design.pptx
+        - text: "Lecture 2"
+          file: Presentations/Lecture2_bcl-to-matrix.pptx
+        - Demonstration/Day1_demonstration.qmd
+        - Exercises/Day1_exercises.qmd
+    - part: "Day 2"
+      chapters:
+        - text: "Lecture 3"
+          file: Presentations/Lecture3_doublet-cells.pptx
+        - text: "Lecture 4"
+          file: Presentations/Lecture4_normalization.pptx
+        - Demonstration/Day2_demonstration.qmd
+        - Exercises/Day2_exercises.qmd
+    - part: "Day 3"
+      chapters:
+        - text: "Lecture 5"
+          file: Presentations/Lecture5_clustering.pptx
+        - Demonstration/Day3_demonstration.qmd
+        - Exercises/Day3_exercises.qmd
+    - part: "Day 4"
+      chapters:
+        - text: "Lecture 6"
+          file: Presentations/Lecture6_annotations.pptx
+        - text: "Lecture 7"
+          file: Presentations/Lecture7_batchcorrection.pdf
+        - Demonstration/Day4_demonstration.qmd
+        - Exercises/Day4_exercises.qmd
+    - part: "Day 5"
+      chapters:
+        - text: "Lecture 8"
+          file: Presentations/Lecture8_pseudotime.pptx
+        - Demonstration/Day5_demonstration.qmd
+        - Exercises/Day5_exercises.qmd
+  appendices:
+    - pages/resources.qmd
+  cover-image: assets/cover.png
+  favicon: assets/favicon.png
+  sidebar: 
+    style: "docked"
+    background: "light"
+    collapse-level: 5
