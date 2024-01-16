@@ -18,6 +18,17 @@ Depends:
     R (>= 4.3)
 Imports:
 Suggests:
+    tidyverse, 
+    SummarizedExperiment, 
+    airway, 
+    GenomicRanges, 
+    plyranges, 
+    SingleCellExperiment, 
+    tidySingleCellExperiment, 
+    Seurat, 
+    slingshot, 
+    DropletUtils, 
+    scDblFinder, 
     BiocManager, 
     BiocVersion, 
     BiocStyle, 
