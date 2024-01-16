@@ -22,9 +22,13 @@ We will prepare scRNAseq data from a PBMC run, provided by 10X and hosted by `Bi
 
 ### Preparing dataset 
 
-> Which package from `Bioconductor` gives streamlined access to PBMC scRNAseq dataset from 10X Genomics?  
-> Import the 4K PBMCs dataset provided by 10X Genomics directly in R.  
-> What does the object contain (type of data, number of cells, batches, organism, ...)? 
+::: {.callout-question .icon .callout-note}
+
+-  Which package from `Bioconductor` gives streamlined access to PBMC scRNAseq dataset from 10X Genomics?
+-  Import the 4K PBMCs dataset provided by 10X Genomics directly in R.
+-  What does the object contain (type of data, number of cells, batches, organism, ...)? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 pbmc <- TENxPBMCData::TENxPBMCData('pbmc4k')
@@ -35,9 +39,17 @@ colData(pbmc)
 table(pbmc$Library)
 ```
 
+:::
+
+:::
+
 ### Remove doublets and filter non-relevant genes
 
-> Use `scDblFinder` to flag and remove cell doublets 
+::: {.callout-question .icon .callout-note}
+
+Use `scDblFinder` to flag and remove cell doublets 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 pbmc <- scDblFinder::scDblFinder(pbmc)
@@ -45,11 +57,19 @@ table(pbmc$scDblFinder.class)
 pbmc <- pbmc[, pbmc$scDblFinder.class == 'singlet']
 ```
 
+:::
+
+:::
+
 You will then need to import gene annotations (from the right organism!) in R, to then filter out irrelevant genes. 
 
-> Get gene loci from Ensembl using `AnnotationHub`  
-> Filter to only get protein-coding, ENSEMBL+HAVANA-annotated genomic genes  
-> Further remove genes that are not expressed in at least 10 cells
+::: {.callout-question .icon .callout-note}
+
+- Get gene loci from Ensembl using `AnnotationHub`
+- Filter to only get protein-coding, ENSEMBL+HAVANA-annotated genomic genes
+- Further remove genes that are not expressed in at least 10 cells
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 # Annotate genes in pbmc dataset
@@ -75,6 +95,10 @@ pbmc <- scuttle::addPerFeatureQCMetrics(pbmc)
 pbmc <- pbmc[rowSums(counts(pbmc) > 0) >= 10, ]
 ```
 
+:::
+
+:::
+
 ### Normalize counts using `sctransform`
 
 ```{r eval = FALSE}
@@ -99,8 +123,12 @@ This aims to preserve interesting biological structure without the variance that
 The simplest approach to feature selection is to simply compute the variance of the log-normalized expression values, to select the most variable genes. 
 Modelling of the mean-variance relationship can be achieved by the `modelGeneVar()` function from the `scran` package.
 
-> Read more about `scran::modelGeneVar()` [online](https://rdrr.io/github/MarioniLab/scran/man/modelGeneVar.html)  
-> Model gene variance ~ gene average expression. What is the range of biological variance and technical variance? 
+::: {.callout-question .icon .callout-note}
+
+- Read more about `scran::modelGeneVar()` [online](https://rdrr.io/github/MarioniLab/scran/man/modelGeneVar.html) 
+- Model gene variance ~ gene average expression. What is the range of biological variance and technical variance?
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 # Fit the gene variance as a function of the gene mean expression
@@ -123,8 +151,16 @@ p <- ggplot(df) +
     labs(x = 'Gene mean exp. (norm.)', y = 'Gene exp. variance')
 ```
 
-> Extract the 20% genes with the highest biological variance.  
-> Plot gene variance ~ gene average expression, coloring genes which are flagged as HVGs.
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Extract the 20% genes with the highest biological variance. 
+- Plot gene variance ~ gene average expression, coloring genes which are flagged as HVGs.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 HVGs <- scran::getTopHVGs(pbmc_variance, prop = 0.1)
@@ -146,6 +182,10 @@ p <- ggplot(df) +
     labs(x = 'Gene mean exp. (norm.)', y = 'Gene exp. variance')
 ```
 
+:::
+
+:::
+
 ### Embedding in a lower dimensional linear space
 
 We now have normalized counts filtered for the top 20% genes varying with the greatest biological significance.  
@@ -154,8 +194,12 @@ We can further compress the dataset. The most widely used approach is `PCA`:
 it computes a small number of "components" (typically 5-50) optimally summarizing the variability of the whole dataset, 
 while retaining linearity of the underlying numerical data and being computationallt quite efficient. 
 
-> Read `scater::denoisePCA()` documentation. What is the benefit of this function compared to `runPCA()`?   
-> Leverage `scater` package to compute `PCA` embedding of the filtered data, by taking into account the technical variability.
+::: {.callout-question .icon .callout-note}
+
+- Read `scater::denoisePCA()` documentation. What is the benefit of this function compared to `runPCA()`? 
+- Leverage `scater` package to compute `PCA` embedding of the filtered data, by taking into account the technical variability.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 pbmc <- scran::denoisePCA(
@@ -172,7 +216,15 @@ p <- cowplot::plot_grid(
 )
 ```
 
-> Check levels of gene expression for few genes (e.g. `CD8A`, `MS4A1`, ...) using PCA embedding for visualization. Comment
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+Check levels of gene expression for few genes (e.g. `CD8A`, `MS4A1`, ...) using PCA embedding for visualization. Comment
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 p <- cowplot::plot_grid(
@@ -182,6 +234,10 @@ p <- cowplot::plot_grid(
     scater::plotReducedDim(pbmc, 'PCA', colour_by = 'FCER1A')
 )
 ```
+
+:::
+
+:::
 
 ## 3. Clustering 
 
@@ -206,7 +262,11 @@ it is a flexible and scalable technique for clustering even the largest scRNA-se
 We first build a graph where each node is a cell that is connected by edges to its nearest neighbors in the high-dimensional space. 
 Edges are weighted based on the similarity between the cells involved, with higher weight given to cells that are more closely related.
 
-> Compute graph-based clustering of the PBMC dataset.
+::: {.callout-question .icon .callout-note}
+
+Compute graph-based clustering of the PBMC dataset.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 graph <- scran::buildSNNGraph(pbmc, use.dimred = 'PCA')
@@ -215,8 +275,16 @@ table(pbmc_clust)
 pbmc$clusters_graph <- factor(pbmc_clust)
 ```
 
-> What are the main parameters to choose? How do they impact the clustering?  
-> Try a non-default value for `k` argument. What is the impact on the clustering? 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- What are the main parameters to choose? How do they impact the clustering?
+- Try a non-default value for `k` argument. What is the impact on the clustering? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 # Re-compute a graph changing the `k` parameter, and identify resulting clusters
@@ -234,6 +302,11 @@ p <- cowplot::plot_grid(
 )
 ```
 
+:::
+
+:::
+
+
 ### Dimensional reduction for clustering visualization
 
 `PCA` is a powerful linear approach to compress large datasets into smaller dimensional spaces. However, 
@@ -247,9 +320,13 @@ it struggles at emphasizing the existence of clusters in complex datasets, when 
     - Multi-Dimensional Scaling (MDS)
     - Non-negative Matrix Factorization (NMF)
 
-> Explore the different dimensional reduction algorithms, trying different hyperparameters combinations.  
-> When you run these commands, pay attention to how long each command takes to run!  
-> While this run, check the `Help` page for each function (e.g. `?scater::runTSNE`)  
+::: {.callout-question .icon .callout-note}
+
+- Explore the different dimensional reduction algorithms, trying different hyperparameters combinations.
+- When you run these commands, pay attention to how long each command takes to run!
+- While this run, check the `Help` page for each function (e.g. `?scater::runTSNE`)
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 reducedDims(pbmc)
@@ -260,13 +337,26 @@ reducedDims(pbmc)
 reducedDim(pbmc, 'DiffusionMap')[1:10, ]
 ```
 
-> Use the `scater::plotReducedDim()` function to plot cells in each embedding. Comment.
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Use the `scater::plotReducedDim()` function to plot cells in each embedding. Comment.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 p<- cowplot::plot_grid(
     scater::plotReducedDim(pbmc, 'PCA', colour_by = 'clusters_graph') + ggtitle('denoised PCA'),
     scater::plotReducedDim(pbmc, 'TSNE', colour_by = 'clusters_graph') + ggtitle('tSNE'),
     scater::plotReducedDim(pbmc, 'UMAP', colour_by = 'clusters_graph') + ggtitle('UMAP'),
-    scater::plotReducedDim(pbmc, 'DiffusionMap', colour_by = 'clusters_graph') + ggtitle('Diffusion')   
+    scater::plotReducedDim(pbmc, 'DiffusionMap', colour_by = 'clusters_graph') + ggtitle('Diffusion') 
 )
 ```
+
+:::
+
+:::
+

@@ -23,9 +23,13 @@ output:
 
 Importing 10X Genomics scRNAseq data in R can be done using `DropletUtils` package. 
 
-> Read the documentation for DropletUtils utilities useful for 10X Genomics data import [here](https://www.bioconductor.org/packages/devel/bioc/vignettes/DropletUtils/inst/doc/DropletUtils.html#from-the-umi-count-matrix).  
-> Download 1K mouse E18 heart scRNAseq filtered count matrix from 10X Genomics (in `HDF5` format [available here](https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_filtered_feature_bc_matrix.h5)).  
-> Import it into `R` using `read10xCounts()` function.
+::: {.callout-question .icon .callout-note}
+
+- Read the documentation for DropletUtils utilities useful for 10X Genomics data import [here](https://www.bioconductor.org/packages/devel/bioc/vignettes/DropletUtils/inst/doc/DropletUtils.html#from-the-umi-count-matrix). 
+- Download 1K mouse E18 heart scRNAseq filtered count matrix from 10X Genomics (in `HDF5` format [available here](https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_filtered_feature_bc_matrix.h5)). 
+- Import it into `R` using `read10xCounts()` function.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 dir.create('data/E18_Heart/cellranger/E18_Heart/')
@@ -37,9 +41,17 @@ download.file(
 heart <- DropletUtils::read10xCounts('data/E18_Heart/cellranger/E18_Heart/heart_1k_v3_filtered_feature_bc_matrix.h5')
 ```
 
-> How many cells were sequenced in this dataset? How many genes are profiled?  
-> What is the distribution of genes being detected per cell, and of number of unique transcripts being detected per cell? And for each gene, what is the distribution of number of cells it is detected in? Use QC functions from the `scuttle` package to automatically compute these metrics.  
-> What is the sparsity of the data (in other words, how dense is the count matrix)?
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- How many cells were sequenced in this dataset? How many genes are profiled? 
+- What is the distribution of genes being detected per cell, and of number of unique transcripts being detected per cell? And for each gene, what is the distribution of number of cells it is detected in? Use QC functions from the `scuttle` package to automatically compute these metrics. 
+- What is the sparsity of the data (in other words, how dense is the count matrix)?
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 # Experiment size 
@@ -56,21 +68,38 @@ quantile(rowData(heart)$detected, seq(0, 1, 0.1))
 sum(counts(heart) > 0) / {dim(heart)[1] * dim(heart)[2]}
 ```
 
+:::
+
+:::
+
+
 ### Use "pre-compiled" datasets 
 
 The `scRNAseq` package (from Bioconductor) allows one to import public datasets directly in R. 
 
-> Read the documentation vignette [here](https://bioconductor.org/packages/release/data/experiment/vignettes/scRNAseq/inst/doc/scRNAseq.html).  
-> Import scRNAseq data from `Zeisel et al., Science 2015` ([doi: 10.1126/science.aaa1934](https://doi.org/10.1126/science.aaa1934)) in R using the `scRNAseq` package. 
+::: {.callout-question .icon .callout-note}
+
+- Read the documentation vignette [here](https://bioconductor.org/packages/release/data/experiment/vignettes/scRNAseq/inst/doc/scRNAseq.html). 
+- Import scRNAseq data from `Zeisel et al., Science 2015` ([doi: 10.1126/science.aaa1934](https://doi.org/10.1126/science.aaa1934)) in R using the `scRNAseq` package.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 zeisel <- scRNAseq::ZeiselBrainData()
 ```
 
-> How many cells were sequenced in this dataset? How many genes are profiled?   
-> What is the distribution of genes being detected per cell, and of number of unique transcripts being detected per cell?   
-> What is the sparsity of the data (in other words, how dense is the count matrix)?  
-> Compare with 10X Genomics-provided data. Comment on the differences. What was the single-cell sequencing technique used in Zeisel et al.? 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- How many cells were sequenced in this dataset? How many genes are profiled? 
+- What is the distribution of genes being detected per cell, and of number of unique transcripts being detected per cell? 
+- What is the sparsity of the data (in other words, how dense is the count matrix)? 
+- Compare with 10X Genomics-provided data. Comment on the differences. What was the single-cell sequencing technique used in Zeisel et al.? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 # Experiment size 
@@ -87,8 +116,16 @@ quantile(rowData(zeisel)$detected, seq(0, 1, 0.1))
 sum(counts(zeisel) > 0) / {dim(zeisel)[1] * dim(zeisel)[2]}
 ```
 
-> What are the different annotations available for the cells?   
-> What are the tissues used for cell profiling? Which type of cells come from which tissue? 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- What are the different annotations available for the cells? 
+- What are the tissues used for cell profiling? Which type of cells come from which tissue? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 # Check cell type annotations
@@ -102,6 +139,10 @@ table(zeisel$tissue)
 table(zeisel$level1class, zeisel$tissue)
 ```
 
+:::
+
+:::
+
 ### UMI number / cell 
 
 A useful diagnostic for scRNAseq data is the barcode rank plot, 
@@ -113,8 +154,12 @@ focusing on those with the largest counts.
 
 This diagnostic plot can be generated using `DropletUtils` package, notably the `barcodeRanks()` function. 
 
-> Try to use `barcodeRanks()` function to compute and plot UMI # / cell across all the cells in either 10X Genomics-generated data or Zeisel's data.   
-> Comment the difference. Again, what are the important differences in term of single-cell approaches used here? 
+::: {.callout-question .icon .callout-note}
+
+- Try to use `barcodeRanks()` function to compute and plot UMI # / cell across all the cells in either 10X Genomics-generated data or Zeisel's data. 
+- Comment the difference. Again, what are the important differences in term of single-cell approaches used here? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 library(tidyverse)
@@ -139,6 +184,10 @@ p <- list(
     labs(x = 'Cells ranked by total UMI', y = 'Total UMI count / cell')
 ```
 
+:::
+
+:::
+
 ## 2. Filter emtpy and doublet droplets
 
 An important step when getting your hands on droplet-based single-cell RNA-seq data is to be confident 
@@ -152,7 +201,7 @@ empty droplets from droplets containing cells with low amounts of RNA.
 `emptyDrops()` function from the `DropletUtils` package provides a methodology to (1) estimate the 
 ambient RNA contamination and then (2) compute a probability that each droplet contains a cell. 
 
-> Since `emptyDrops()` assumes that most of the droplets in a matrix are empty, one needs to start the analysis from the **raw unfiltered** count matrix provided by 10X Genomics. Download the E18 mouse heart scRNAseq raw unfiltered count matrix from 10X Genomics [here](https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_raw_feature_bc_matrix.h5).
+Since `emptyDrops()` assumes that most of the droplets in a matrix are empty, one needs to start the analysis from the **raw unfiltered** count matrix provided by 10X Genomics. Download the E18 mouse heart scRNAseq raw unfiltered count matrix from 10X Genomics [here](https://cf.10xgenomics.com/samples/cell-exp/3.0.0/heart_1k_v3/heart_1k_v3_raw_feature_bc_matrix.h5).
 
 ```{r eval = FALSE}
 download.file(
@@ -165,10 +214,14 @@ heart_raw
 dim(heart_raw)
 ```
 
-> Use `emptyDrops()` to differentiate empty droplets from cell-containing droplets. 
+::: {.callout-question .icon .callout-note}
+
+Use `emptyDrops()` to differentiate empty droplets from cell-containing droplets. 
 
 Be aware, the empty droplet detection step is quite lenghty! After all, you are scanning several millions of droplets, most of them empty!
 To fasten the process, you can specify a number of cpus to use in parallel, with the `BiocParallel::MulticoreParam()` function.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 # emptyDrops performs Monte Carlo simulations to compute p-values, so we need to set the seed to obtain reproducible results.
@@ -180,6 +233,10 @@ heart_droplets
 table(heart_droplets$FDR <= 0.001)
 heart_filtered <- heart_raw[, which(heart_droplets$FDR <= 0.001)]
 ```
+
+:::
+
+:::
 
 Even with multiple cpus, the computation can take up to several hours. So if you wish to skip this step for now, 
 you can use the `cellranger`-automatically filtered matrix for now. It is not exactly equivalent, but does a fairly good job 
@@ -200,8 +257,12 @@ A way to identify cell doublets is to artifically mix thousands of pairs of cell
 a `SingleCellExperiment` object, then compare the resulting cells to each cell in the original dataset. 
 Original cells which resemble a lot the artificial doublets are likely doublet themselves. 
 
-> Read `scDblFinder` documentation [here](https://bioconductor.org/packages/release/bioc/vignettes/scDblFinder/inst/doc/scDblFinder.html#usage).  
-> Use `scDblFinder()` function to flag probable cell doublets in manually filtered heart dataset. 
+::: {.callout-question .icon .callout-note}
+
+- Read `scDblFinder` documentation [here](https://bioconductor.org/packages/release/bioc/vignettes/scDblFinder/inst/doc/scDblFinder.html#usage). 
+- Use `scDblFinder()` function to flag probable cell doublets in manually filtered heart dataset. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 #BiocManager::install('scDblFinder')
@@ -211,6 +272,10 @@ colData(heart_filtered)
 table(heart_filtered$scDblFinder.class)
 ```
 
+:::
+
+:::
+
 For now, we can keep these doublets. We will see in the future whether we remove them or not. 
 
 ## 3. (Optional) Exclude non-relevant genes from analysis
@@ -218,8 +283,12 @@ For now, we can keep these doublets. We will see in the future whether we remove
 The 10X Genomics-provided count matrix contains `31053` annotated genes. However, there are likely less than 20,000 of them 
 which are genomic, protein-coding, expressed genes. We can filter genes based on the location, biotype and overall detection in the dataset. 
 
-> Recover gene annotations as `gtf` from ensembl uing the `AnnotationHub`  
-> Filter to only get protein-coding, ENSEMBL+HAVANA-annotated genomic genes
+::: {.callout-question .icon .callout-note}
+
+- Recover gene annotations as `gtf` from ensembl uing the `AnnotationHub` 
+- Filter to only get protein-coding, ENSEMBL+HAVANA-annotated genomic genes
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 library(plyranges)
@@ -232,7 +301,15 @@ genes <- gtf %>%
     filter(gene_source == 'ensembl_havana')
 ```
 
-> Filter genes from the SingleCellExperiment dataset to only protein-coding, ENSEMBL+HAVANA-annotated genomic genes
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+Filter genes from the SingleCellExperiment dataset to only protein-coding, ENSEMBL+HAVANA-annotated genomic genes
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 names(genes) <- genes$gene_id
@@ -243,13 +320,26 @@ mcols(gr) <- cbind(mcols(gr), rowData(heart_filtered))[, c('gene_id', 'gene_name
 rowRanges(heart_filtered) <- gr
 ```
 
-> Filter remaining genes to only keep those detected in at least 10 cells
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+Filter remaining genes to only keep those detected in at least 10 cells
+
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 quantile(rowSums(counts(heart_filtered) > 0), seq(0, 1, 0.1))
 table( rowSums(counts(heart_filtered) > 0) >= 10 )
 heart_filtered <- heart_filtered[rowSums(counts(heart_filtered) > 0) >= 10, ]
 ```
+
+:::
+
+:::
 
 ## 4. Normalize data
 
@@ -267,7 +357,11 @@ Depending on the set up of the scRNAseq experiment, this can be entirely false. 
 we can (1) quickly pre-cluster cells, then (2) normalize cells using their library size factor separately in each cluster, then 
 (3) rescaling size factors so that they are comparable across clusters.
 
-> Read documentation for `scran` functions `quickCluster()` and `computeSumFactors()`. Compute size factors for each cell in the manually filtered E18 mouse heart scRNAseq dataset
+::: {.callout-question .icon .callout-note}
+
+Read documentation for `scran` functions `quickCluster()` and `computeSumFactors()`. Compute size factors for each cell in the manually filtered E18 mouse heart scRNAseq dataset
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 clusters <- scran::quickCluster(heart_filtered)
@@ -278,7 +372,15 @@ head(heart_filtered$sizeFactor)
 quantile(heart_filtered$sizeFactor, seq(0, 1, 0.1))
 ```
 
-> Compare the size factor to the total count of UMI / cell. Comment. 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+Compare the size factor to the total count of UMI / cell. Comment. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 heart_filtered <- scuttle::addPerCellQCMetrics(heart_filtered)
@@ -302,7 +404,15 @@ p <- tibble(
     labs(x = 'Total UMI', y = 'Size factors')
 ```
 
-> Using the computed size factors, perform log-normalization of the data. Read `scuttle::logNormCounts()` documentation if needed. 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+Using the computed size factors, perform log-normalization of the data. Read `scuttle::logNormCounts()` documentation if needed. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 heart_filtered <- scuttle::logNormCounts(heart_filtered)
@@ -327,10 +437,18 @@ p <- tibble(
     labs(x = 'Raw counts', y = 'log-normalized counts')
 ```
 
+:::
+
+:::
+
 ### [BONUS] VST normalization 
 
-> Quickly read the extensive vignette about scRNAseq normalization using variance stabilizing transformation [here](https://rawgit.com/ChristophH/sctransform/supp_html/supplement/variance_stabilizing_transformation.html).  
-> First, check the relationship between (1) mean gene expression and gene expression variance and (2) mean gene expression and gene detection rate, in the manually filtered E18 mouse heart scRNAseq count matrix.
+::: {.callout-question .icon .callout-note}
+
+- Quickly read the extensive vignette about scRNAseq normalization using variance stabilizing transformation [here](https://rawgit.com/ChristophH/sctransform/supp_html/supplement/variance_stabilizing_transformation.html). 
+- First, check the relationship between (1) mean gene expression and gene expression variance and (2) mean gene expression and gene detection rate, in the manually filtered E18 mouse heart scRNAseq count matrix.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 cnts <- as(SingleCellExperiment::counts(heart_filtered), 'dgCMatrix')
@@ -369,15 +487,31 @@ p2 <- ggplot(df, aes(x = mean, y = detection_rate)) +
 p <- cowplot::plot_grid(p1, p2, nrow = 1)
 ```
 
-> Apply `sctransform::vst()` function on raw counts from manually filtered E18 mouse heart scRNAseq count matrix. 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+Apply `sctransform::vst()` function on raw counts from manually filtered E18 mouse heart scRNAseq count matrix. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 heart_vst <- sctransform::vst(cnts, return_cell_attr = TRUE)
 ```
 
-> Using variance-stabilized residuals, correct the raw counts in the heart scRNAseq count matrix. You will need `sctransform::correct()` function to do this  
-> Store the corrected counts in an assay named `corrected_counts`  
-> Log-transform the `corrected_counts` using `log1p()` function and store the transformed counts in an assay named `logcounts_vst`
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Using variance-stabilized residuals, correct the raw counts in the heart scRNAseq count matrix. You will need `sctransform::correct()` function to do this 
+- Store the corrected counts in an assay named `corrected_counts` 
+- Log-transform the `corrected_counts` using `log1p()` function and store the transformed counts in an assay named `logcounts_vst`
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 corrected_cnts <- sctransform::correct(heart_vst)
@@ -386,9 +520,17 @@ assay(heart_filtered, 'corrected_counts', withDimnames = FALSE) <- corrected_cnt
 assay(heart_filtered, 'logcounts_vst', withDimnames = FALSE) <- log1p(corrected_cnts)
 ```
 
-> Once this is done, check again the relationship between mean gene expression and gene expression variance.   
-> Check how the count variance now varies with increasing mean gene counts. Comment.  
-> Check how the detection rate now varies with increasing mean gene counts. Comment.
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Once this is done, check again the relationship between mean gene expression and gene expression variance. 
+- Check how the count variance now varies with increasing mean gene counts. Comment. 
+- Check how the detection rate now varies with increasing mean gene counts. Comment.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 df <- rbind(
@@ -434,4 +576,11 @@ p2 <- ggplot(df, aes(x = mean, y = detection_rate)) +
     facet_grid(~normalization)
 p <- cowplot::plot_grid(p1, p2, nrow = 2)
 ```
+
+:::
+
+:::
+
+
+
 

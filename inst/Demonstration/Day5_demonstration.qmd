@@ -193,7 +193,7 @@ ggsave('data/MCCs/joint-WT-CcnoKO-trajectory.pdf')
 
 ## 3. Perform DE expression analysis on a portion of the trajectory
 
-> Filter cells based on 99% max of pseudotime_slingshot for CcnoKO
+### Filter cells based on 99% max of pseudotime_slingshot for CcnoKO
 
 ```{r eval = FALSE}
 threshold <- quantile(mergedSCEs$slingshot1[mergedSCEs$sample == 'KO'], 0.99, na.rm = TRUE)
@@ -206,7 +206,9 @@ p <- cowplot::plot_grid(
 )
 ```
 
-> Running tradeSeq using new slingshot pseudotimes (with counts, blocking on genotype, with WTs/CcnoKO as a condition).
+### Running tradeSeq using new slingshot pseudotimes 
+
+Using counts, blocking on genotype, with WTs/CcnoKO as a condition.
 
 ```{r eval = FALSE}
 counts <- as.matrix(assay(mergedSCEs_subset, 'counts'))

@@ -97,8 +97,12 @@ allowing us to treat the clustering as a *proxy* for cell type identity.
 
 A general strategy is to perform DE tests between pairs of clusters and then combine results into a single ranking of marker genes for each cluster.
 
-> Read `scran::findMarkers()` documentation  
-> Run the function on the PBMC dataset to find all the markers associated with individual graph-based clusters.
+::: {.callout-question .icon .callout-note}
+
+- Read `scran::findMarkers()` documentation
+- Run the function on the PBMC dataset to find all the markers associated with individual graph-based clusters.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 markers <- scran::findMarkers(pbmc, groups = pbmc$clusters_graph)
@@ -108,7 +112,15 @@ markers %>%
     bind_rows(.id = 'cluster')
 ```
 
-> Re-run `scran::findMarkers()` to only find markers strongly overexpressed in each cluster.
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Re-run `scran::findMarkers()` to only find markers strongly overexpressed in each cluster.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 markers <- scran::findMarkers(
@@ -124,55 +136,30 @@ markers %>%
     bind_rows(.id = 'cluster')
 ```
 
-> Plot average expression of the first marker of the first cluster in tSNE
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Plot average expression of the first marker of the first cluster in tSNE
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 p <- scater::plotReducedDim(pbmc, 'TSNE', colour_by = rownames(markers[[1]])[1])
 ```
 
-> For data visualization aficionados... For each cluster, plot average expression of its markers as a dotplot 
+:::
 
-```{r eval = FALSE}
-genes <- markers %>% 
-    as('list') %>% 
-    map(function(x){
-        as_tibble(x, rownames = 'gene') %>% 
-        mutate(meanFC = {dplyr::select(., starts_with('logFC')) %>% rowMeans()}) %>%
-        mutate(allPositiveFC = {dplyr::select(., starts_with('logFC')) %>% `>`(0) %>% apply(1, all)}) %>% 
-        dplyr::filter(allPositiveFC, meanFC > 1) %>%
-        slice_head(n = 5)
-    }) %>% 
-    bind_rows(.id = 'cluster') %>% 
-    mutate(cluster = factor(cluster, levels = c(1:max(cluster)))) %>%
-    pull(gene)
-df <- logcounts(pbmc[genes, ]) %>% 
-    t() %>%
-    as_tibble() %>% 
-    mutate(cluster = factor(pbmc$clusters_graph, levels = c(2, 3, 5, 7, 11, 1, 4, 8, 6, 9, 10))) %>% 
-    pivot_longer(cols = contains(genes), names_to = 'gene', values_to = 'expr') %>% 
-    group_by(cluster, gene) %>%
-    mutate(gene = factor(gene, levels = unique(gene))) %>%
-    summarize(expr = mean(expr))
-ordered_genes <- pivot_wider(df, names_from = gene, values_from = expr) %>% 
-    ungroup() %>%
-    dplyr::select(-cluster) %>% 
-    t() %>% 
-    dist() %>% 
-    hclust()
-p <- df %>% mutate(gene = factor(gene, levels = ordered_genes$labels[ordered_genes$order])) %>% 
-    ggplot(aes(
-        x = cluster, 
-        y = gene, 
-        col = expr, 
-        size = expr
-    )) + 
-    geom_point() + 
-    scale_color_gradientn(colours = c('#ffecae', '#ffc46c', '#ff7e14', '#c9430f', '#8d0909')) +
-    theme_bw()
-```
+:::
 
-> Check knwon PBMC markers in the Human Protein Atlas, which compiles a very nice overview of gene expression in different cell types, e.g. [here](https://www.proteinatlas.org/ENSG00000135916-ITM2C/blood).  
-> Looking at these PBMC markers in the dataset, speculate to propose a label for each cluster in this 4K PBMC dataset.  
+::: {.callout-question .icon .callout-note}
+
+- Check knwon PBMC markers in the Human Protein Atlas, which compiles a very nice overview of gene expression in different cell types, e.g. [here](https://www.proteinatlas.org/ENSG00000135916-ITM2C/blood).
+- Looking at these PBMC markers in the dataset, speculate to propose a label for each cluster in this 4K PBMC dataset.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 markers <- c(
@@ -189,15 +176,23 @@ p <- lapply(markers, function(g) {
 }) %>% cowplot::plot_grid(plotlist = .)
 ```
 
+:::
+
+:::
+
 ## 2. Automated cell annotation
 
 Many human cell type reference databases are available over the Internet, especially for blood tissue.
 Today, we will use a reference constructed from `Monaco et al., Cell Reports 2019` ([doi: 10.1016/j.celrep.2019.01.041](https://doi.org/10.1016/j.celrep.2019.01.041)).
 This reference is available as a `SummarizedExperiment` containing log-normalized gene expression for manually annotated samples. 
 
-> Import Monaco dataset in R. Inspect its content. The structure of the object should feel familiar: it's a `Summarized Experiment`!  
-> Check the publication report. How was each sample (column) obtained? What type of sequencing?   
-> What types of cell annotation are available? Can this reference be useful for the annotation of the PBMC dataset? 
+::: {.callout-question .icon .callout-note}
+
+- Import Monaco dataset in R. Inspect its content. The structure of the object should feel familiar: it's a `Summarized Experiment`!
+- Check the publication report. How was each sample (column) obtained? What type of sequencing? 
+- What types of cell annotation are available? Can this reference be useful for the annotation of the PBMC dataset? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 monaco <- celldex::MonacoImmuneData()
@@ -209,9 +204,17 @@ table(monaco$label.main)
 table(monaco$label.fine)
 ```
 
-> Read `SingleR` documentation. Can it be leveraged to transfer reference annotations to PBMC dataset?   
-> Use `SingleR` to transfer reference annotations to PBMC dataset.  
-> Check how transferred annotations recapitulate manual graph-based clustering. 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Read `SingleR` documentation. Can it be leveraged to transfer reference annotations to PBMC dataset? 
+- Use `SingleR` to transfer reference annotations to PBMC dataset.
+- Check how transferred annotations recapitulate manual graph-based clustering. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 predictions_main <- SingleR::SingleR(
@@ -237,8 +240,16 @@ p <- cowplot::plot_grid(
 )
 ```
 
-> Using `scater` and `SingleR` utilities, check the annotation score for each cell in the scRNAseq. Did the automated annotation work robuslty?  
-> Is automated annotation as sensitive as graph-based clustering, in this context?
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Using `scater` and `SingleR` utilities, check the annotation score for each cell in the scRNAseq. Did the automated annotation work robuslty?
+- Is automated annotation as sensitive as graph-based clustering, in this context?
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 p <- SingleR::plotScoreHeatmap(predictions_fine)
@@ -248,7 +259,15 @@ p <- pheatmap::pheatmap(
 )
 ```
 
-> Using main and fine annotations, label each cluster in 2 lists of hierarchical labels
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Using main and fine annotations, label each cluster in 2 lists of hierarchical labels
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 hierarchy_1 <- c(
@@ -285,10 +304,18 @@ p <- cowplot::plot_grid(
 )
 ```
 
-Note how cells from cluster 1 and 2 are both robustly identifed as DCs. Yet, they appear in tSNE as 2 well-separated clusters. 
-This discrepancy most likely comes from the fact that at a finer level, they seem to be 2 different types of DCs: plasmacytoid DCs and myeloid DCs.     
+:::
 
-> Check genes preferentially enriched in plasma. DCs vs myeloid DCs
+:::
+
+Note how cells from cluster 1 and 2 are both robustly identifed as DCs. Yet, they appear in tSNE as 2 well-separated clusters. 
+This discrepancy most likely comes from the fact that at a finer level, they seem to be 2 different types of DCs: plasmacytoid DCs and myeloid DCs. 
+
+::: {.callout-question .icon .callout-note}
+
+- Check genes preferentially enriched in plasma. DCs vs myeloid DCs
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 DCs <- pbmc[ , pbmc$label_hierarchy_1 == 'DC']
@@ -303,13 +330,21 @@ markers[[2]] %>%
     dplyr::filter(summary.logFC > log2(2), FDR <= 0.01)
 ```
 
+:::
+
+:::
+
 ## 3. Subclustering of T cells
 
 T cells are spatially separated in 2 or 3 broad groups. However, their complexity 
 is much more important than this. Despite the fine annotations obtained from transfer of Monaco data, 
 T cells heterogeneity are poorly resolved. 
 
-> Subset the T cells and re-process them (variance modelling, PCA embedding, graph-based clustering and tSNE embedding)
+::: {.callout-question .icon .callout-note}
+
+- Subset the T cells and re-process them (variance modelling, PCA embedding, graph-based clustering and tSNE embedding)
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 Tcells <- pbmc[ , pbmc$label_hierarchy_1 == 'T']
@@ -350,8 +385,16 @@ p <- cowplot::plot_grid(
 )
 ```
 
-> Re-tranfer annotations from Monaco et al. to only T cells
-> Does re-transferring annotations on a subset of cells change the annotation obtained for each individual cell? 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Re-tranfer annotations from Monaco et al. to only T cells
+- Does re-transferring annotations on a subset of cells change the annotation obtained for each individual cell? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 Tcells_predictions_main <- SingleR::SingleR(
@@ -370,8 +413,16 @@ table(Tcells$subannotation_hierarchy_1, Tcells$annotation_hierarchy_1)
 table(Tcells$subannotation_hierarchy_2, Tcells$annotation_hierarchy_2)
 ```
 
-> Compare the subclusters to transferred annotations. Does subclustering help better representing the heterogeneity of T cells? 
-> Propose alternative(s) to better resolve single-cell transcriptomes of T cells.
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Compare the subclusters to transferred annotations. Does subclustering help better representing the heterogeneity of T cells? 
+- Propose alternative(s) to better resolve single-cell transcriptomes of T cells.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 # Visualize earlier clustering and new clustering 
@@ -394,4 +445,8 @@ p <- pheatmap::pheatmap(
     cluster_rows = FALSE, cluster_cols = FALSE
 )
 ```
+
+:::
+
+:::
 

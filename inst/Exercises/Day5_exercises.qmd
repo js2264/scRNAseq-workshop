@@ -30,7 +30,11 @@ These counts are still generally not available when using public datasets. A way
 Let's do this on a dataset published by Guo et al., Cell Res. 2018 ([doi: 10.1038/s41422-018-0099-2](https://doi.org/10.1038/s41422-018-0099-2)). 
 There are 6 `bam` files corresponding to human male testis single-cell RNA-seq profiling ([GSE: GSE112013](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE112013)). 
 
-> Download bam files from GEO
+::: {.callout-question .icon .callout-note}
+
+- Download bam files from GEO
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{sh eval = FALSE}
 mkdir data/Guo_testis/
@@ -42,11 +46,19 @@ do
 done
 ```
 
+:::
+
+:::
+
 To run `velocyto`, one needs to know where introns and exons are located in the genome reference used to process reads. 
 In our case, `GRCh38` genome reference was used.
 
-> Read `cellranger` instructions on how to generate a `gtf` file corresponding to GRCh38 genome reference [here](https://support.10xgenomics.com/single-cell-gene-expression/software/release-notes/build#GRCh38_2020A).  
-> Create `GRCh38` gene annotation gtf file following Cellranger recommendations
+::: {.callout-question .icon .callout-note}
+
+- Read `cellranger` instructions on how to generate a `gtf` file corresponding to GRCh38 genome reference [here](https://support.10xgenomics.com/single-cell-gene-expression/software/release-notes/build#GRCh38_2020A).
+- Create `GRCh38` gene annotation gtf file following Cellranger recommendations
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{sh eval = FALSE}
 mkdir data/Guo_testis/genome
@@ -75,11 +87,19 @@ grep -Ff data/Guo_testis/genome/gene_allowlist data/Guo_testis/genome/gencode.v3
     >> data/Guo_testis/genome/gencode.v32.primary_assembly.annotation_filtered.gtf
 ```
 
+:::
+
+:::
+
 To make the `velocyto` step faster, one can only use reads from bam files originating from 
 cell-containing droplets. One way to do so is to extract cell barcodes from the already filtered
 scRNAseq dataset, and use them in the `-b` argument of `velocyto`. 
 
-> (Optional) Get cell barcodes from cellranger (this requires pre-processed scRNAseq data, available from GEO)  
+::: {.callout-question .icon .callout-note}
+
+- (Optional) Get cell barcodes from cellranger (this requires pre-processed scRNAseq data, available from GEO)
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 library(tidyverse) 
@@ -91,13 +111,21 @@ vroom::vroom('data/Guo_testis/GSE112013_Combined_UMI_table.txt') %>%
     writeLines('data/Guo_testis/testis_cell-barcodes.txt')
 ```
 
+:::
+
+:::
+
 By now, we have obtained 3 different files: 
 
 1. BAM files of scRNAseq data mapped onto GRCh38
 2. GTF file of GRCh38 gene annotations
 3. A barcode file for BAM file pre-filtering
 
-> Run velocyto on each sample
+::: {.callout-question .icon .callout-note}
+
+- Run velocyto on each sample
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{sh eval = FALSE}
 mkdir data/Guo_testis/velocyto
@@ -115,11 +143,19 @@ do
 done
 ```
 
+:::
+
+:::
+
 We have obtained six `loom` files, but ideally we want them merged as a single 
 `SingleCellExperiment` object readable in R. 
 
-> Read about `LoomExperiment` package. Is there an easy (and reliable) way to import loom files in R?
-> Merge loom files directly in R and save the resulting object as a `rds` binary file. 
+::: {.callout-question .icon .callout-note}
+
+- Read about `LoomExperiment` package. Is there an easy (and reliable) way to import loom files in R?
+- Merge loom files directly in R and save the resulting object as a `rds` binary file. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 library(tidyverse)
@@ -140,11 +176,19 @@ looms$Barcode <- str_replace_all(looms$CellID, '.*:', '') %>% str_replace('x', '
 saveRDS(looms, 'data/Guo_testis/testis_velocity-counts.rds')
 ```
 
+:::
+
+:::
+
 ## 1. Process testis data in R
 
 The same workflow than previous days can be reused here. 
 
-> Import testis dataset in R, filter cells and genes, normalize `counts`, embed data and cluster cells.
+::: {.callout-question .icon .callout-note}
+
+- Import testis dataset in R, filter cells and genes, normalize `counts`, embed data and cluster cells.
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 library(SingleCellExperiment)
@@ -240,9 +284,17 @@ p <- cowplot::plot_grid(
 )
 ```
 
-> Load `HPA` data [from internet](https://www.proteinatlas.org/download/rna_single_cell_type.tsv.zip). Try to format it as a `SummarizedExperiment`. What celltypes are profiled? 
-> Use these cell type profiles to annotate cell types in the testis dataset. 
-> How do the annotations look like? Can you find a reason why the label transfer worked so well?
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Load `HPA` data [from internet](https://www.proteinatlas.org/download/rna_single_cell_type.tsv.zip). Try to format it as a `SummarizedExperiment`. What celltypes are profiled? 
+- Use these cell type profiles to annotate cell types in the testis dataset. 
+- How do the annotations look like? Can you find a reason why the label transfer worked so well?
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 download.file(
@@ -279,6 +331,10 @@ p <- cowplot::plot_grid(
 )
 ```
 
+:::
+
+:::
+
 ## 2. Trajectory inference (TI) in scRNAseq
 
 An important question in scRNAseq field of research is: how to identify a cell trajectory 
@@ -293,9 +349,13 @@ A nice breakdown (from 2019, so already very outdated!) is available from
 
 `Slingshot` is perhaps one of the most widely used algorithms for users who want to focus on `R`-based approaches. 
 
-> Read Slingshot documentation to understand how to identify lineages in a scRNAseq dataset in R  
-> Infer lineages in the testis dataset  
-> Why is it recommended to infer lineages from PCA space rather than t-SNE or UMAP space, even though these spaces do "reveal" an obvious trajectory in 2D? 
+::: {.callout-question .icon .callout-note}
+
+- Read Slingshot documentation to understand how to identify lineages in a scRNAseq dataset in R
+- Infer lineages in the testis dataset
+- Why is it recommended to infer lineages from PCA space rather than t-SNE or UMAP space, even though these spaces do "reveal" an obvious trajectory in 2D? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 testis_slingshot <- slingshot::slingshot(testis, reducedDim = 'corrected')
@@ -303,7 +363,15 @@ testis_slingshot
 slingshot::slingLineages(testis_slingshot)
 ```
 
-> Check the inferred trajectory(ies) in 2D projection. You can use the `embedCurves()` to embed the curves in any given dimensional space. Do they fit your expectations? 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Check the inferred trajectory(ies) in 2D projection. You can use the `embedCurves()` to embed the curves in any given dimensional space. Do they fit your expectations? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 pca_curve <- slingCurves(testis_slingshot, as.df = TRUE)
@@ -334,9 +402,17 @@ p <- cowplot::plot_grid(
 )
 ```
 
-> Filter the testis dataset to only germinal cells.  
-> Re-infer lineages, using cluster annotations as information to build the MST. Note that you will first need to remove the 50th PCA dimension for `slingshot` to work (bug reported).   
-> What do you observe? Discuss. 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Filter the testis dataset to only germinal cells.
+- Re-infer lineages, using cluster annotations as information to build the MST. Note that you will first need to remove the 50th PCA dimension for `slingshot` to work (bug reported). 
+- What do you observe? Discuss. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 germcells <- testis[, testis$annotation %in% c("Spermatogonia", "Spermatocytes", "Early spermatids", "Late spermatids")]
@@ -389,6 +465,10 @@ p <- cowplot::plot_grid(
 )
 ```
 
+:::
+
+:::
+
 ### Pseudotime inference and expression modelling
 
 The pseudotime is a metric describing the relative position of a cell in the trajectory, 
@@ -398,8 +478,12 @@ is generally used as a proxy for its relative age.
 
 #### Pseudotime inference
 
-> Extract the pseudotime values automatically computed by `slingshot`. 
-> Check the distribution of pseudotime values across the different cell clusters. What do you observe? Where you expecting this? 
+::: {.callout-question .icon .callout-note}
+
+- Extract the pseudotime values automatically computed by `slingshot`. 
+- Check the distribution of pseudotime values across the different cell clusters. What do you observe? Where you expecting this? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 p <- tibble(
@@ -413,53 +497,23 @@ p <- tibble(
     theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) 
 ```
 
-> Correct pseudotime values as you would expect it to be. 
+:::
+
+:::
+
+::: {.callout-question .icon .callout-note}
+
+- Correct pseudotime values as you would expect it to be. 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 germcells$pseudotime <- scales::rescale((-1 * slingshot::slingPseudotime(germcells_slingshot)[, 'Lineage1']), c(0, 1))
 ```
 
-#### [BONUS] Daunting snippet but that makes a cool figure for a paper: modeling pseudotime-dependent gene expression
+:::
 
-Using pseudotime / cell, one can model gene expression along the differentiation process. 
-This alleviates the need to study gene expression **per cell**, and allows one to focus 
-on process-related effects (e.g. gene expression during a developmental trajectory). 
-
-> Try to do so for few markers of spermatogonia, spermatocytes and spermatids.
-
-```{r eval = FALSE}
-genes <- c(
-    'ID4', 'SYCP3', 'DMC1', 
-    'ACR', 'PRM1', 'PGK2'
-)
-fitExprs <- logcounts(germcells[genes, ]) %>% # ----------------------------------- Get norm. counts for genes of interest
-    as.matrix() %>%
-    t() %>%
-    as_tibble() %>% 
-    mutate(  # ----------------------------------------------------------------- Add information for each cell
-        cellID = colnames(germcells), 
-        annotation = factor(germcells$annotation, c("Spermatogonia", "Spermatocytes", "Early spermatids", "Late spermatids")), 
-        pseudotime = germcells$pseudotime
-    ) %>% 
-    pivot_longer(contains(genes), names_to = 'gene', values_to = 'obs_expr') %>% # - Pivot in "long" tidy format 
-    mutate(gene = factor(gene, genes)) %>%
-    group_by(gene) %>% # ------------------------------------------------------- Group rows by genes
-    nest(.key = 'data') %>% # -------------------------------------------------- For each gene, extract the subtable into a column named data
-    mutate(
-        gamModel = map(data, ~mgcv::gam(obs_expr ~ s(pseudotime, bs = "cs"), data = .)), 
-        gamFitted_expr = map(gamModel, predict) # ------------------------------ For each gene, fit the expression values ~ pseudotime with a GAM
-    ) %>% 
-    dplyr::select(-ends_with('Model')) %>%
-    unnest(c(data, ends_with('_expr'))) # -------------------------------------- Unnest all the modelled expressions
-p <- ggplot(fitExprs) + 
-    ggrastr::geom_point_rast(aes(x = pseudotime, y = obs_expr, col = annotation), alpha = 0.5) + 
-    geom_line(aes(x = pseudotime, y = gamFitted_expr), col = 'white', size = 2, alpha = 0.5) + 
-    geom_line(aes(x = pseudotime, y = gamFitted_expr), col = '#af2d0c', size = 1) +
-    theme_bw() + 
-    facet_grid(gene~., scales = 'free') + 
-    labs(y = 'logcounts') + 
-    ggtitle('Fitted models of pseudotime-dependent gene expression')
-```
+:::
 
 ## 3. Ordering trajectory with RNA velocity
 
@@ -470,9 +524,13 @@ the gene is being downregulated as the rate of production and processing of pre-
 Thus, we can infer that cells with high and low ratios are moving towards a high- and low-expression state, respectively, 
 allowing us to assign directionality to trajectories or even individual cells.
 
-> Read `velociraptor` documentation. What do you need to compute RNA velocity scores in R? 
-> Import `spliced` and `unspliced` counts computed with `velocyto` in R. 
-> Try and compute RNA velocity (on germcells only). What do you see? 
+::: {.callout-question .icon .callout-note}
+
+- Read `velociraptor` documentation. What do you need to compute RNA velocity scores in R? 
+- Import `spliced` and `unspliced` counts computed with `velocyto` in R. 
+- Try and compute RNA velocity (on germcells only). What do you see? 
+
+::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
 looms <- readRDS('data/Guo_testis/testis_velocity-counts.rds')
@@ -498,3 +556,9 @@ p <- scater::plotReducedDim(germcells, 'TSNE', colour_by = "annotation", point_a
         arrow = arrow(length = unit(0.05, "inches"), type = "closed")
     )
 ```
+
+:::
+
+:::
+
+
