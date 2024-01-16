@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Single-cell RNA-seq workshop ed. 2024 - Exercises: From bcl to count matrix</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Presentations/Lecture3_doublet-cells.pptx" rel="next">
+<link href="../Demonstration/Day1_demonstration.html" rel="prev">
+<link href="../assets/favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+</head>
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../Presentations/Lecture1_experimental-design.pptx">Day 1</a></li><li class="breadcrumb-item"><a href="../Exercises/Day1_exercises.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Exercises: From bcl to count matrix</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Single-cell RNA-seq workshop ed.&nbsp;2024</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Program</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Day 1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Presentations/Lecture1_experimental-design.pptx" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Presentations/Lecture2_bcl-to-matrix.pptx" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Demonstration/Day1_demonstration.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Demonstration: From fastq to count matrix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Exercises/Day1_exercises.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Exercises: From bcl to count matrix</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Day 2</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Presentations/Lecture3_doublet-cells.pptx" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture 3</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Presentations/Lecture4_normalization.pptx" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture 4</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Demonstration/Day2_demonstration.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Demonstration: leveraging R/Bioconductor for single-cell analyses</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Exercises/Day2_exercises.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Exercises: scRNAseq analysis with R/Bioconductor (1/3)</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Day 3</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Presentations/Lecture5_clustering.pptx" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture 5</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Demonstration/Day3_demonstration.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Demonstration: Dimensional reduction visualization and clustering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Exercises/Day3_exercises.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Exercises: scRNAseq analysis with R/Bioconductor (2/3)</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Day 4</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Presentations/Lecture6_annotations.pptx" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture 6</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Presentations/Lecture7_batchcorrection.pdf" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture 7</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Demonstration/Day4_demonstration.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Demonstration: Cell type annotation and dataset integration</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Exercises/Day4_exercises.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Exercises: scRNAseq analysis with R/Bioconductor (3/3)</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Day 5</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Presentations/Lecture8_pseudotime.pptx" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Lecture 8</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Demonstration/Day5_demonstration.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Demonstration: Trajectory inference and pseudotime</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Exercises/Day5_exercises.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Exercises: Trajectory inference and RNA velocity</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../pages/resources.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Useful resources</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#introduction-to-shell-terminal" id="toc-introduction-to-shell-terminal" class="nav-link active" data-scroll-target="#introduction-to-shell-terminal">0. Introduction to <code>shell</code> terminal</a></li>
+  <li>
+<a href="#prepare-a-place-in-your-computer-where-you-will-follow-the-workshop" id="toc-prepare-a-place-in-your-computer-where-you-will-follow-the-workshop" class="nav-link" data-scroll-target="#prepare-a-place-in-your-computer-where-you-will-follow-the-workshop">1. Prepare a place in your computer where you will follow the workshop</a>
+  <ul class="collapse">
+<li><a href="#create-a-directory-for-the-workshop" id="toc-create-a-directory-for-the-workshop" class="nav-link" data-scroll-target="#create-a-directory-for-the-workshop">Create a directory for the workshop</a></li>
+  <li><a href="#clone-github-directory-in-the-workshop-directory" id="toc-clone-github-directory-in-the-workshop-directory" class="nav-link" data-scroll-target="#clone-github-directory-in-the-workshop-directory">Clone github directory in the workshop directory</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#process-raw-files-into-fastq-files" id="toc-process-raw-files-into-fastq-files" class="nav-link" data-scroll-target="#process-raw-files-into-fastq-files">2. Process raw files into fastq files</a>
+  <ul class="collapse">
+<li><a href="#getting-input-toy-dataset" id="toc-getting-input-toy-dataset" class="nav-link" data-scroll-target="#getting-input-toy-dataset">Getting input toy dataset</a></li>
+  <li><a href="#running-cellranger-mkfastq" id="toc-running-cellranger-mkfastq" class="nav-link" data-scroll-target="#running-cellranger-mkfastq">Running <code>cellranger mkfastq</code></a></li>
+  </ul>
+</li>
+  <li>
+<a href="#generate-gene-count-matrices-with-cellranger-count" id="toc-generate-gene-count-matrices-with-cellranger-count" class="nav-link" data-scroll-target="#generate-gene-count-matrices-with-cellranger-count">3. Generate gene count matrices with cellranger count</a>
+  <ul class="collapse">
+<li><a href="#download-genome-index-for-the-toy-dataset" id="toc-download-genome-index-for-the-toy-dataset" class="nav-link" data-scroll-target="#download-genome-index-for-the-toy-dataset">Download genome index for the toy dataset</a></li>
+  <li><a href="#running-cellranger-count" id="toc-running-cellranger-count" class="nav-link" data-scroll-target="#running-cellranger-count">Running <code>cellranger count</code></a></li>
+  <li><a href="#checking-count-output-files" id="toc-checking-count-output-files" class="nav-link" data-scroll-target="#checking-count-output-files">Checking <code>count</code> output files</a></li>
+  </ul>
+</li>
+  <li><a href="#alternative-generate-gene-count-matrices-with-starsolo" id="toc-alternative-generate-gene-count-matrices-with-starsolo" class="nav-link" data-scroll-target="#alternative-generate-gene-count-matrices-with-starsolo">3 [Alternative] Generate gene count matrices with STARsolo</a></li>
+  <li>
+<a href="#obtain-single-cell-rna-seq-datasets" id="toc-obtain-single-cell-rna-seq-datasets" class="nav-link" data-scroll-target="#obtain-single-cell-rna-seq-datasets">4. Obtain single-cell RNA-seq datasets</a>
+  <ul class="collapse">
+<li><a href="#raw-fastq-reads-from-geo" id="toc-raw-fastq-reads-from-geo" class="nav-link" data-scroll-target="#raw-fastq-reads-from-geo">Raw fastq reads from GEO</a></li>
+  <li><a href="#bonus-pre-processed-count-matrices" id="toc-bonus-pre-processed-count-matrices" class="nav-link" data-scroll-target="#bonus-pre-processed-count-matrices">[BONUS] Pre-processed count matrices</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Exercises: From bcl to count matrix</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p><strong>Goals:</strong></p>
+<ul>
+<li>Understand the structure of raw sequencing files, fastq files, and output of <code>cellranger</code> workflow.</li>
+<li>Execute the <code>cellranger</code> pipeline (<code>mkfastq</code> + <code>count</code>) to see how things work!</li>
+<li>Learn more about public data access and recovery.</li>
+</ul>
+<hr>
+<section id="introduction-to-shell-terminal" class="level2"><h2 class="anchored" data-anchor-id="introduction-to-shell-terminal">0. Introduction to <code>shell</code> terminal</h2>
+<p><code>shell</code> (<code>sh</code>) is a software used to interpret commands typed in a terminal. It exists in both Mac and Linux environments.</p>
+<p>The basic <code>sh</code> commands are useful to:</p>
+<ul>
+<li>Navigate within directories</li>
+<li>Manage files organization</li>
+<li>Launch command-line-based softwares (e.g.&nbsp;<code>cellranger</code>)</li>
+</ul>
+<p>Here are some of the most important commands:</p>
+<ul>
+<li>Check your working directory</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Check history</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">history</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>put history into a <code>history.txt</code> file</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">history</span> <span class="op">&gt;</span> history.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>make a new folder called data</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Go to the new <code>data</code> directory</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>move <code>history.txt</code> file into <code>data</code> directory</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> ../history.txt ./</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>check manual page of <code>curl</code> command</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">man</span> curl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>check specific help for <code>cellranger</code> command and subcommands</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cellranger</span> <span class="at">--help</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cellranger</span> count <span class="at">--help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>redirect <code>cellranger count</code> help output into a file called <code>cellranger-help.txt</code>
+</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cellranger</span> count <span class="at">--help</span> <span class="op">&gt;</span> cellranger-help.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Download a file from Internet with <code>curl</code>
+</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-1.2.0.tar.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>List all files in a folder</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> ~/</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">--color</span> <span class="at">-Flh</span> ~/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="prepare-a-place-in-your-computer-where-you-will-follow-the-workshop" class="level2"><h2 class="anchored" data-anchor-id="prepare-a-place-in-your-computer-where-you-will-follow-the-workshop">1. Prepare a place in your computer where you will follow the workshop</h2>
+<section id="create-a-directory-for-the-workshop" class="level3"><h3 class="anchored" data-anchor-id="create-a-directory-for-the-workshop">Create a directory for the workshop</h3>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Open a terminal and navigate to your preferred location for the workshop.</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a directory for the workshop </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${HOME}</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> scRNAseq_Jan24</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan24/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>From now on, everything you do should take place in this folder! Be sure you have enough storage space in the filesystem you are using, as you will need lots of it!</p>
+</section><section id="clone-github-directory-in-the-workshop-directory" class="level3"><h3 class="anchored" data-anchor-id="clone-github-directory-in-the-workshop-directory">Clone github directory in the workshop directory</h3>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Download the <code>git</code> repository for this course from <code>GitHub</code></p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan24/</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/js2264/scRNAseq-workshop.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>This downloads the repository for this course to your home folder on the AWS machine.<br>
+To get it on your local computer (to save the lectures and exercises), you can also go to <a href="https://github.com/js2264/scRNAseq-workshop">the GitHub repo page</a>, click on the green <code>Code</code> button, then <code>Download ZIP</code>. Beware, the download may take a significant time based on your internet connection (several hundreds MB).</p>
+</section></section><section id="process-raw-files-into-fastq-files" class="level2"><h2 class="anchored" data-anchor-id="process-raw-files-into-fastq-files">2. Process raw files into fastq files</h2>
+<p><strong>NOTE:</strong> This is a step typically performed internally by sequencing platform, which delivers <code>.fastq</code> files rather than <code>.bcl</code> files.</p>
+<p>First, familiarize yourself with <code>cellranger mkfastq</code> documentation: go to <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq">cellranger mkfastq webpage</a> and read the <strong>Overview</strong>.</p>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What is the command you are going to use? What are the required and optional arguments for this command?</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>An alternative to the web-based documentation is to use the command-line help:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cellranger</span> mkfastq <span class="at">--help</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="getting-input-toy-dataset" class="level3"><h3 class="anchored" data-anchor-id="getting-input-toy-dataset">Getting input toy dataset</h3>
+<p>Let’s download a toy dataset to process into fastq files. A <code>bcl</code> tiny file is available and provided by 10X Genomics at the following adress: <a href="https://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-1.2.0.tar.gz">https://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-1.2.0.tar.gz</a>.</p>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Download the indicated <code>bcl</code> files and unzip it in a subdirectory called <code>data/bcl2fastq/</code>.</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan24/</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> data/bcl2fastq/</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://cf.10xgenomics.com/supp/cell-exp/cellranger-tiny-bcl-1.2.0.tar.gz <span class="at">-o</span> data/bcl2fastq/cellranger-tiny-bcl-1.2.0.tar.gz</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-xzvf</span> data/bcl2fastq/cellranger-tiny-bcl-1.2.0.tar.gz <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> cellranger-tiny-bcl-1.2.0/ data/bcl2fastq/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Explore the contents of the sequencing directory. What does each file correspond to? Can you locate the actual “sequencing” files?</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">--color</span> <span class="at">-ltFh</span> data/bcl2fastq/cellranger-tiny-bcl-1.2.0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Alternatively, you can use the <code>tree</code> command (if available in your system!) to list the content of the <code>cellranger-tiny-bcl-1.2.0</code> directory:</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">tree</span> <span class="at">-L</span> 4 data/bcl2fastq/cellranger-tiny-bcl-1.2.0/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="running-cellranger-mkfastq" class="level3"><h3 class="anchored" data-anchor-id="running-cellranger-mkfastq">Running <code>cellranger mkfastq</code>
+</h3>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Do we have all the required files to run the <code>cellranger mkfastq</code> workflow? What about a samplesheet?</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Normally, when sequencing a library, a samplesheet is provided to the Illumina sequencing machine. In our case, we don’t have direct access to this sample sheet. Regardless, we can create one manually. Here are the info for the different samples which were sequenced in this toy dataset</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Lane,Sample,Index</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="st">1,test_sample1,SI-GA-E3</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="st">1,test_sample2,SI-GA-F3</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="st">1,test_sample3,SI-GA-G3</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="st">1,test_sample4,SI-GA-H3</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="st">"</span> <span class="op">&gt;</span> data/bcl2fastq/cellranger-tiny-bcl-samplesheet.csv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What does each column corresponds to? How is this going to be used when generating fastq files?</p>
+</div>
+</div>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now that we have a samplesheet ready, let’s launch the <code>cellranger mkfastq</code> workflow.</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan24/data/bcl2fastq/</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cellranger</span> mkfastq <span class="dt">\</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--id</span><span class="op">=</span>tiny-bcl <span class="dt">\</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--run</span><span class="op">=</span>cellranger-tiny-bcl-1.2.0/ <span class="dt">\</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--csv</span><span class="op">=</span>cellranger-tiny-bcl-samplesheet.csv</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan24/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Watch out the memory usage! For <code>mkfastq</code> command with human genome, at least 32 Gb of RAM are required!</p>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>What are the different files generated by this workflow?</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Once the conversion is achieved, the output folders can be viewed by running the <code>ls</code> command:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">--color</span> <span class="at">-ltFv</span> data/bcl2fastq/tiny-bcl/</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">--color</span> <span class="at">-ltFv</span> data/bcl2fastq/tiny-bcl/outs/fastq_path/H35KCBCXY/test_sample1/</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">### Or ...</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="ex">tree</span> <span class="at">-L</span> 3 data/bcl2fastq/tiny-bcl/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>How many fastq files have been generated? What does each one correspond to?</li>
+<li>Look at the index read (I1), read 1 (R1), and read (R2) files using the command <code>zcat &lt;FASTQ_FILE_NAME&gt;.gz | head</code>. What does each file contain?</li>
+<li>Open the html file <code>tiny-bcl/outs/fastq_path/Reports/html/index.html</code>. Take some time to explore the demultiplexed outputs.</li>
+</ul>
+</div>
+</div>
+</section></section><section id="generate-gene-count-matrices-with-cellranger-count" class="level2"><h2 class="anchored" data-anchor-id="generate-gene-count-matrices-with-cellranger-count">3. Generate gene count matrices with cellranger count</h2>
+<p>Familiarize yourself with the <code>cellranger count</code> documentation available here: <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/algorithms/overview">cellranger count algorithm overview</a>. Notably, read the section on <strong>Alignment</strong> (<code>Read Trimming</code>, <code>Genome Alignment</code>, <code>MAPQ adjustment</code>, <code>Transcriptome Alignment</code>, <code>UMI Counting</code>).</p>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Which files are required for this step? Do we have all we need? Where is the index genome located?</p>
+</div>
+</div>
+<section id="download-genome-index-for-the-toy-dataset" class="level3"><h3 class="anchored" data-anchor-id="download-genome-index-for-the-toy-dataset">Download genome index for the toy dataset</h3>
+<p><code>mm10</code> pre-processed cellranger-formatted genome reference index is available <a href="https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz">here</a>.</p>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Download it in a subdirectory named <code>${HOME}/scRNAseq_Jan24/</code></p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz <span class="at">-o</span> refdata-gex-mm10-2020-A.tar.gz</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-xzvf</span> refdata-gex-mm10-2020-A.tar.gz <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> refdata-gex-mm10-2020-A/ data/bcl2fastq/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">--color</span> <span class="at">-ltFh</span> data/bcl2fastq/refdata-gex-mm10-2020-A/<span class="pp">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="running-cellranger-count" class="level3"><h3 class="anchored" data-anchor-id="running-cellranger-count">Running <code>cellranger count</code>
+</h3>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the terminal, run the <code>count</code> command.</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">${HOME}</span>/scRNAseq_Jan24/data/bcl2fastq/</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cellranger</span> count <span class="dt">\</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">--id</span><span class="op">=</span>counts <span class="dt">\</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--transcriptome</span><span class="op">=</span>refdata-gex-mm10-2020-A <span class="dt">\</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--fastqs</span><span class="op">=</span>tiny-bcl/outs/fastq_path/ <span class="dt">\</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--sample</span><span class="op">=</span>test_sample1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>While the count command is running, read about the <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/output/matrices">format of the feature-barcode matrices</a>.</p>
+</section><section id="checking-count-output-files" class="level3"><h3 class="anchored" data-anchor-id="checking-count-output-files">Checking <code>count</code> output files</h3>
+<p>Once the count command is finished running, the pipeline outputs can be viewed as follows:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">--color</span> <span class="at">-ltFh</span> counts/</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">--color</span> <span class="at">-ltFh</span> counts/outs/</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">### Or ...</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="ex">tree</span> <span class="at">-L</span> 4 counts/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Can you locate the feature-barcode matrices? What is the difference between the <code>raw_feature_bc_matrix</code> and <code>filtered_feature_bc_matrix</code> data types? In term of storage size?</p></li>
+<li><p>Open the html file <code>counts/outs/web_summary.html</code>. Take some time to explore the gene expression matrix outputs.</p></li>
+<li><p>How many clusters seem to be found? What are the main markers associated with each cluster?<br></p></li>
+<li><p>Can you speculate what the main difference(s) is between the clusters?<br></p></li>
+<li><p>Do the different metrics suggest that this sample contains good-quality data?</p></li>
+</ul>
+</div>
+</div>
+</section></section><section id="alternative-generate-gene-count-matrices-with-starsolo" class="level2"><h2 class="anchored" data-anchor-id="alternative-generate-gene-count-matrices-with-starsolo">3 [Alternative] Generate gene count matrices with STARsolo</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install STAR</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">-c</span> bioconda star </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build STAR index</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz <span class="at">-o</span> refdata-gex-mm10-2020-A.tar.gz</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-xzvf</span> refdata-gex-mm10-2020-A.tar.gz <span class="kw">&amp;&amp;</span> <span class="fu">mv</span> refdata-gex-mm10-2020-A/ data/bcl2fastq/</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="ex">STAR</span> <span class="at">--runMode</span> genomeGenerate <span class="at">--runThreadN</span> 16 <span class="at">--genomeDir</span> data/bcl2fastq/ <span class="at">--genomeFastaFiles</span> data/bcl2fastq/refdata-gex-mm10-2020-A/fasta/genome.fa  <span class="at">--sjdbGTFfile</span> data/bcl2fastq/refdata-gex-mm10-2020-A/genes/genes.gtf</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="va">STAR_GENOME_DIR</span><span class="op">=</span>data/bcl2fastq/refdata-gex-mm10-2020-A/star/</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Get barcode whitelist</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://raw.githubusercontent.com/10XGenomics/cellranger/master/lib/python/cellranger/barcodes/737K-august-2016.txt <span class="at">-o</span> data/bcl2fastq/737K-august-2016.txt</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="va">BC_WHITELIST_FILE</span><span class="op">=</span>data/bcl2fastq/737K-august-2016.txt</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Run STAR</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="ex">STAR</span> <span class="dt">\</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">--genomeDir</span> <span class="st">"</span><span class="va">${STAR_GENOME_DIR}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">--soloType</span> CB_UMI_Simple <span class="dt">\</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">--soloCBwhitelist</span> <span class="st">"</span><span class="va">${BC_WHITELIST_FILE}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">--readFilesIn</span> data/bcl2fastq/tiny-bcl/outs/fastq_path/Undetermined_S0_L001_R2_001.fastq.gz data/bcl2fastq/tiny-bcl/outs/fastq_path/Undetermined_S0_L001_R1_001.fastq.gz</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="obtain-single-cell-rna-seq-datasets" class="level2"><h2 class="anchored" data-anchor-id="obtain-single-cell-rna-seq-datasets">4. Obtain single-cell RNA-seq datasets</h2>
+<p>“This is a course about single-cell RNA-seq analysis, right, so where is my data?”</p>
+<p>Ok, <strong>“your”</strong> data is (most likely) yet to be sequenced! Or maybe you’re interested in digging already existing databases! I mean, who isn’t interested in <a href="https://www.10xgenomics.com/blog/our-13-million-single-cell-dataset-is-ready-to-download">this mind-blowing achievement from 10X Genomics</a>??</p>
+<p><a href="https://data.humancellatlas.org/explore/projects">Human Cell Atlas</a> is probably a good place to start digging, if you are interested in mammal-related studies. For instance, let’s say I am interested in epididymis differentiation. Boom: here is an entry from the HCA focusing on epididymis: <a href="https://data.humancellatlas.org/explore/projects/842605c7-375a-47c5-9e2c-a71c2c00fcad">link to HCA data portal</a>.</p>
+<section id="raw-fastq-reads-from-geo" class="level3"><h3 class="anchored" data-anchor-id="raw-fastq-reads-from-geo">Raw fastq reads from GEO</h3>
+<p>Here is the link to the actual paper studying epididymis:<br><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7471510/">An atlas of human proximal epididymis reveals cell-specific functions and distinct roles for CFTR</a>.</p>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Find and check out the corresponding <code>GEO</code> entries for this study. What type of sequencing data is available?</p>
+</div>
+</div>
+<p>Here is the link to the <code>GEO</code> page: <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE148963">link</a>.</p>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Can you find links to download the raw data from this paper?</p>
+</div>
+</div>
+<p>There are several ways to find this information, e.g.&nbsp;<code>ffq</code> command line tool, or using the web-based <code>sra-explorer</code> page (<a href="https://sra-explorer.info/">here</a>). You generally will need the <code>GEO</code> corresponding ID or SRA project ID (e.g.&nbsp;<code>SRPxxxxxx</code>…).</p>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Try to install and use <a href="https://github.com/pachterlab/ffq"><code>ffq</code> tool</a> from the Patcher lab.</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-29-contents" aria-controls="callout-29" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-29" class="callout-29-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">-c</span> bioconda ffq</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ffq</span> <span class="at">--help</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="ex">ffq</span> <span class="at">-t</span> GSE GSE148963</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Can you find the links to raw data associated with the <code>GSE148963</code> GEO ID?</p>
+<div class="icon callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-31-contents" aria-controls="callout-31" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-31" class="callout-31-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You should use a <code>grep</code> command: <code>grep</code> returns the lines which match a given pattern (e.g.&nbsp;a link…)!</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ffq</span> <span class="at">-t</span> GSE GSE148963 <span class="kw">|</span> <span class="fu">grep</span> <span class="st">'ftp://'</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And with a bit of <code>sed</code> magick…</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ffq</span> <span class="at">-t</span> GSE GSE148963 <span class="kw">|</span> <span class="fu">grep</span> <span class="st">'ftp://'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s,.*ftp:,ftp:,'</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s,".*,,'</span> <span class="op">&gt;</span> GSE148963_fastqlist.txt</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># wget -i GSE148963_fastqlist.txt ## Do not run, it would take too long...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="bonus-pre-processed-count-matrices" class="level3"><h3 class="anchored" data-anchor-id="bonus-pre-processed-count-matrices">[BONUS] Pre-processed count matrices</h3>
+<p>Many times, researchers will provide a filtered count matrix when they publish scRNAseq experiments (along with mandatory raw <code>fastq</code> data, of course). It’s way lighter than <code>fastq</code> reads, and you can go ahead with downstream analyses a lot quicker. So how do you get these matrices?</p>
+<ul>
+<li>Human Cell Atlas Consortium provides many processed datasets. For instance, in our case, the <code>Leir et al</code> study is available at the following link: <a href="https://data.humancellatlas.org/explore/projects/842605c7-375a-47c5-9e2c-a71c2c00fcad">https://data.humancellatlas.org/explore/projects/842605c7-375a-47c5-9e2c-a71c2c00fcad</a>.</li>
+<li>GEO also hosts processed files.</li>
+</ul>
+<div class="icon callout callout-style-default callout-question no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Find GEO-hosted processed files for the <code>Leir et al</code> study.</li>
+</ul>
+<p>You can download some of the processed files available in GEO from <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE148963">the following webpage</a>. Scrolling down to the bottom of the page, there is a box labelled “Supplementary data”. By clicking on “(custom)”, a list of extra supplementary files will appear.</p>
+<ul>
+<li>Download and check the content of the count matrix, the genes and the barcodes files.<br>
+</li>
+<li>What type of information does each file contain? How is it formatted? is it easily imported in R?<br>
+</li>
+<li>How many cells were sequenced? How many genes were counted?<br>
+</li>
+<li>Is it easy to interpret the count matrix? Why is it in such format?<br>
+</li>
+<li>Comment on the file sizes between processed count matrix files and raw reads.</li>
+</ul>
+</div>
+</div>
+
+
+</section></section><a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../Demonstration/Day1_demonstration.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Demonstration: From fastq to count matrix</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../Presentations/Lecture3_doublet-cells.pptx" class="pagination-link">
+        <span class="nav-page-text">Lecture 3</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">This book was built with <a href="https://github.com/js2264/BiocBook/">BiocBook</a> with <span class="emoji" data-emoji="heart">❤️</span></div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>
