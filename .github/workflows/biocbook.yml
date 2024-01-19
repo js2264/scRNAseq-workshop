@@ -78,7 +78,7 @@ jobs:
 
       - name: 📚 Recover pkg artifacts generated during build in local Docker container (pkg bundle and book) 
         env:
-          IMG: ${{ steps.docker.outputs.ImageID }}
+          IMG: ghcr.io/js2264/scrnaseqworkshop:latest
         run: |
           SHA=$(docker container create ${{ env.IMG }})
           docker container cp ${SHA}:/${{ env.Pkgname }}_${{ env.pkgversion }}.tar.gz .
