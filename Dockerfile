@@ -36,14 +36,12 @@ RUN cd /opt/ && \
     tar -xzf 2.7.11a.tar.gz && \
     cd STAR-2.7.11a/source && \
     make STAR && \
-    echo 'export PATH="/opt/STAR-2.7.11a/bin/Linux_x86_64/:${PATH}"' >> ~/.bashrc && \
-    source ~/.bashrc
+    echo 'export PATH="/opt/STAR-2.7.11a/bin/Linux_x86_64/:${PATH}"' >> ~/.bashrc
 
 RUN cd /opt/ && \
     gdown 1rnwz1v-sUy04fG9U5aWnc9VQ8pZIBjEp && \
     tar -xzf cellranger-7.2.0.tar.gz && \
-    echo 'export PATH="/opt/cellranger-7.2.0:${PATH}"' >> ~/.bashrc && \
-    source ~/.bashrc
+    echo 'export PATH="/opt/cellranger-7.2.0:${PATH}"' >> ~/.bashrc
 
 # Install book package and build/install using same approach than BBS
 RUN Rscript -e 'repos <- BiocManager::repositories() ; remotes::install_local(path = "/opt/pkg/", repos=repos, dependencies=TRUE, build_vignettes=FALSE, upgrade=TRUE) ; sessioninfo::session_info(installed.packages()[,"Package"], include_base = TRUE)' && \
