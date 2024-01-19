@@ -8,9 +8,8 @@ Version: 0.98.0
 Date: `r date()`
 Authors@R: 
     person(
-        "First", "Last", , "first.last@example.com", 
-        role = c("aut", "cre"),
-        comment = c(ORCID = "YOUR-ORCID-ID")
+        "Jacques", "Serizay", , "jacques.serizay@pasteur.fr", 
+        role = c("aut", "cre")
     )
 URL: https://github.com/js2264/scRNAseqWorkshop
 BugReports: https://github.com/js2264/scRNAseqWorkshop
@@ -29,16 +28,51 @@ Suggests:
     slingshot, 
     DropletUtils, 
     scDblFinder, 
-    BiocManager, 
-    BiocVersion, 
+    scRNAseq, 
+    celldex, 
+    reticulate, 
+    umap, 
+    corrplot,
+    gam,
+    ggbeeswarm,
+    ggthemes,
+    Matrix,
+    zeallot,
+    fossil,
+    rgl,
+    scran,
+    scater,
+    scuttle, 
+    batchelor,
+    scmap,
+    AUCell,
+    SingleR,
+    tradeSeq,
+    clusterExperiment,
+    velociraptor,
+    AnnotationHub,
+    TENxPBMCData, 
+    BiocSingular, 
+    knitr,
+    glue,
+    scales, 
+    bluster, 
+    igraph, 
+    pheatmap, 
+    ggrastr, 
+    future, 
+    vroom, 
+    sctransform, 
+    cowplot, 
     BiocStyle, 
     glue,
     sessioninfo,
-    knitr 
+    devtools, 
+    remotes
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 BiocType: Book
-License: MIT + file LICENSE
+License: MIT
 VignetteBuilder: knitr
 BiocBookTemplate: 1.0.6
 SystemRequirements: quarto

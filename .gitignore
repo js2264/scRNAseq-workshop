@@ -7,3 +7,4 @@ static/Presentations/old_presentations
 invoice*
 ~$*
 .gitignore
+cellranger*
