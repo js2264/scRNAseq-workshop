@@ -304,7 +304,7 @@ download.file(
 system('unzip data/Guo_testis/rna_single_cell_type.tsv.zip')
 system('mv rna_single_cell_type.tsv data/Guo_testis/')
 HPA <- vroom::vroom('data/Guo_testis/rna_single_cell_type.tsv') %>% 
-    pivot_wider(names_from = `Cell type`, values_from = 'NX') %>% 
+    pivot_wider(names_from = `Cell type`, values_from = 'nTPM') %>% 
     dplyr::select(-Gene) %>% 
     distinct(`Gene name`, .keep_all = TRUE) %>% 
     column_to_rownames('Gene name') %>% 
@@ -358,6 +358,7 @@ A nice breakdown (from 2019, so already very outdated!) is available from
 ::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
+library(slingshot)
 testis_slingshot <- slingshot::slingshot(testis, reducedDim = 'corrected')
 testis_slingshot
 slingshot::slingLineages(testis_slingshot)
@@ -534,9 +535,12 @@ allowing us to assign directionality to trajectories or even individual cells.
 
 ```{r eval = FALSE}
 looms <- readRDS('data/Guo_testis/testis_velocity-counts.rds')
+colnames(testis) <- testis$Barcode
+rn <- intersect(rownames(testis), rownames(looms))
+cn <- intersect(colnames(testis), colnames(looms))
+testis <- testis[rn, cn]
+looms <- looms[rn, cn]
 assays(looms)
-rownames(looms) <- rowData(looms)$Gene
-testis <- testis[rownames(looms), ]
 assay(testis, 'spliced', withDimnames=FALSE) <- assay(looms, 'spliced')
 assay(testis, 'unspliced', withDimnames=FALSE) <- assay(looms, 'unspliced')
 germcells <- testis[, testis$annotation %in% c("Spermatogonia", "Spermatocytes", "Early spermatids", "Late spermatids")]
@@ -552,7 +556,7 @@ grid.df <- velociraptor::gridVectors(reducedDim(germcells, "TSNE"), embedded_vel
 p <- scater::plotReducedDim(germcells, 'TSNE', colour_by = "annotation", point_alpha = 0.5) +
     geom_segment(
         data = grid.df, 
-        mapping = aes(x = start.1, y = start.2, xend = end.1, yend = end.2), 
+        mapping = aes(x = start.TSNE1, y = start.TSNE2, xend = end.TSNE1, yend = end.TSNE2), 
         arrow = arrow(length = unit(0.05, "inches"), type = "closed")
     )
 ```
