@@ -71,6 +71,7 @@ jobs:
           file: Dockerfile_nosystem
           platforms: ${{ matrix.platform }}
           context: .
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             BIOC_VERSION=${{ github.ref_name }}
