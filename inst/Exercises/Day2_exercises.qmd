@@ -162,7 +162,11 @@ This diagnostic plot can be generated using `DropletUtils` package, notably the 
 ::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
-library(tidyverse)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(ggplot2)
 heart_barcoderanks <- DropletUtils::barcodeRanks(heart)
 zeisel_barcoderanks <- DropletUtils::barcodeRanks(zeisel)
 p <- list(

@@ -138,7 +138,11 @@ quantile(pbmc_variance$bio, seq(0, 1, 0.1))
 quantile(pbmc_variance$tech, seq(0, 1, 0.1))
 
 # Visualizing the mean-variance fit
-require(tidyverse)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(ggplot2)
 df <- tibble(
     mean = metadata(pbmc_variance)$mean, 
     var = metadata(pbmc_variance)$var, 

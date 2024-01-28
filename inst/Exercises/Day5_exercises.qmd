@@ -102,7 +102,12 @@ scRNAseq dataset, and use them in the `-b` argument of `velocyto`.
 ::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
-library(tidyverse) 
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(stringr)
+library(ggplot2)
 vroom::vroom('data/Guo_testis/GSE112013_Combined_UMI_table.txt') %>% 
     colnames() %>% 
     str_replace_all('Donor.-', '') %>% 
@@ -158,7 +163,12 @@ We have obtained six `loom` files, but ideally we want them merged as a single
 ::: {.callout-answer .icon .callout-note collapse=true}
 
 ```{r eval = FALSE}
-library(tidyverse)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(stringr)
+library(ggplot2)
 library(LoomExperiment)
 looms <- list.files('data/Guo_testis/velocyto/', full.names = TRUE) %>% 
     lapply(LoomExperiment::import) %>% 
@@ -192,7 +202,12 @@ The same workflow than previous days can be reused here.
 
 ```{r eval = FALSE}
 library(SingleCellExperiment)
-library(tidyverse)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(stringr)
+library(ggplot2)
 download.file(
     'https://ftp.ncbi.nlm.nih.gov/geo/series/GSE112nnn/GSE112013/suppl/GSE112013_Combined_UMI_table.txt.gz', 
     'data/Guo_testis/GSE112013_Combined_UMI_table.txt.gz'

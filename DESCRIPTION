@@ -4,7 +4,7 @@ Description:
     This sentence is a placeholder. It should be changed by the author of 
     the package to describe the purpose of this BiocBook. 
     It should be at least 3 sentences otherwise `BiocCheck` will complain.
-Version: 0.98.0
+Version: 0.98.1
 Date: `r date()`
 Authors@R: 
     person(
@@ -17,13 +17,16 @@ Depends:
     R (>= 4.3)
 Imports:
 Suggests:
-    tidyverse, 
+    tibble, 
+    dplyr, 
+    tidyr, 
+    ggplot2, 
+    stringr, 
     SummarizedExperiment, 
     airway, 
     GenomicRanges, 
     plyranges, 
     SingleCellExperiment, 
-    tidySingleCellExperiment, 
     Seurat, 
     slingshot, 
     DropletUtils, 
@@ -32,23 +35,16 @@ Suggests:
     celldex, 
     reticulate, 
     umap, 
-    corrplot,
     gam,
-    ggbeeswarm,
-    ggthemes,
     Matrix,
-    zeallot,
-    fossil,
     rgl,
     scran,
     scater,
     scuttle, 
     batchelor,
     scmap,
-    AUCell,
     SingleR,
     tradeSeq,
-    clusterExperiment,
     velociraptor,
     AnnotationHub,
     TENxPBMCData, 
@@ -67,7 +63,6 @@ Suggests:
     BiocStyle, 
     glue,
     sessioninfo,
-    devtools, 
     remotes
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

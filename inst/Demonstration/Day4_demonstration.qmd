@@ -49,7 +49,12 @@ We have sequenced 2 replicates of WT cells differentiated into MCCs. Let's proce
 
 ```{r eval = FALSE}
 library(SingleCellExperiment)
-library(tidyverse)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(stringr)
+library(ggplot2)
 Bl6J_WT <- readRDS('data/MCCs/Bl6J_WT.rds')
 Bl6N_WT <- readRDS('data/MCCs/Bl6N_WT.rds')
 future::plan(strategy = "multicore", workers = 16)

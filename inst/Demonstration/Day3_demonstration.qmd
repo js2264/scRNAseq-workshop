@@ -26,7 +26,12 @@ Let's load the data I have provided and inspect it:
 
 ```{r eval = FALSE}
 library(SingleCellExperiment)
-library(tidyverse)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(stringr)
+library(ggplot2)
 #
 MCCs <- readRDS('data/MCCs/MCCs.rds')
 MCCs

@@ -18,7 +18,12 @@ output:
 
 ```{r include = FALSE, eval = FALSE}
 library(SingleCellExperiment)
-library(tidyverse)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(stringr)
+library(ggplot2)
 set.seed(1000)
 Bl6J_WT <- readRDS('data/MCCs/Bl6J_WT.rds')
 Bl6N_WT <- readRDS('data/MCCs/Bl6N_WT.rds')

@@ -75,7 +75,11 @@ The two main concepts behind `Bioconductor`'s success are the **non-redundant** 
 This set of key concepts help general data investigation and data visualization through a set of associated packages such as `ggplot2`. 
 
 ```{r eval = FALSE}
-library(tidyverse)
+library(tibble)
+library(tidyr)
+library(dplyr)
+library(readr)
+library(ggplot2)
 dat <- tibble(
     x = 1:5, 
     y = 1, 
@@ -261,7 +265,6 @@ Let's load a fully-fleged `SingleCellExperiment` object, so we can play around w
 
 ```{r eval = FALSE}
 library(SingleCellExperiment)
-library(tidySingleCellExperiment)
 sce <- readRDS(url('https://github.com/js2264/scRNAseq-workshop/raw/main/pbmc3k.rds'), "rb")
 class(sce)
 sce
