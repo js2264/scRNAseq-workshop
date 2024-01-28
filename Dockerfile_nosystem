@@ -31,4 +31,4 @@ RUN sudo apt update && sudo apt install -y \
     pip install velocyto ffq gdown
 
 # Install book package and build/install using same approach than BBS
-RUN Rscript -e 'remotes::install_local(path = "/opt/pkg/", repos = BiocManager::repositories(), dependencies = TRUE, build_vignettes = FALSE, upgrade = TRUE)'
+RUN Rscript -e 'BiocManager::install("js2264/scRNAseq-workshop", dependencies = TRUE)'
